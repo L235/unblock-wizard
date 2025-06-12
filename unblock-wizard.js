@@ -5,7 +5,7 @@
  * Used on [[Wikipedia:Unblock wizard]].
  * Loaded via [[mw:Snippets/Load JS and CSS by URL]].
  * 
- * Edits can be proposed via pinging me somewhere.
+ * Edits can be proposed via [[Wikipedia talk:Unblock wizard]].
  *
  * Author: [[User:Chaotic Enby]] (derived from a script by [[User:SD0001]])
  * Licence: MIT
