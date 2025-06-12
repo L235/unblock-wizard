@@ -1,11 +1,11 @@
 /**
- * User:Chaotic Enby/Unblock wizard.js
+ * MediaWiki:Unblock-wizard.js
  *
  * JavaScript used for submitting unblock requests.
- * Used on [[User:Chaotic Enby/Unblock wizard]].
+ * Used on [[Wikipedia:Unblock wizard]].
  * Loaded via [[mw:Snippets/Load JS and CSS by URL]].
  * 
- * Edits can be proposed via pinging me somewhere.
+ * Edits can be proposed via pinging Chaotic Enby somewhere.
  *
  * Author: [[User:Chaotic Enby]] (derived from a script by [[User:SD0001]])
  * Licence: MIT
@@ -24,7 +24,7 @@ $.when(
 		'mediawiki.widgets', 'oojs-ui-core', 'oojs-ui-widgets'
 	])
 ).then(function () {
-	if (!(mw.config.get('wgPageName').includes('User:Chaotic_Enby/Unblock_wizard/')) ||
+	if (!(mw.config.get('wgPageName').includes('Wikipedia:Unblock wizard/')) ||
 		mw.config.get('wgAction') !== 'view') {
 		return;
 	}
