@@ -121,7 +121,8 @@ function init() {
 		"meta": "userinfo",
 		"uiprop": "blockinfo"
 	}).then( setBlockData ).then( function ( block ) {
-		blockType = mw.config.get('wgPageName').slice(33);
+		blockType = mw.config.get('wgPageName').split('/');
+		blockType = blockType[blockType.length - 1];
 		
 		switch (blockType) {
 			case "Sockpuppet":
