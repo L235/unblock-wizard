@@ -55,7 +55,7 @@ var messages = {
 	"future-promo-label": "If you are unblocked, what topic areas will you edit in?",
 	"username-label": "If you were blocked for having a promotional username, what new username do you want to pick?",
 	"clarification-label": "Is there anything specific you want to ask about your block?",
-	"submit-label": "Publish",
+	"submit-label": "Submit",
 	"footer-text": "<small>If you are not sure about what to enter in a field, you can skip it. If you need help, you can ask on <b>[[Special:MyTalk|your talkpage]]</b> with <b>{{[[Template:Help me|Help me]]}}</b> or get live help via <b>[[WP:IRCHELP|IRC]]</b> or <b>[[WP:DISCORD|Discord]]</b>.<br>Facing some issues in using this form? <b>[/w/index.php?title=Wikipedia_talk:Unblock_wizard&action=edit&section=new&preloadtitle=Issue%20with%20submission%20form&editintro=Wikipedia_talk:Unblock_wizard/editintro Report it]</b>.</small>",
 	"submitting-as": "Submitting as User:$1",
 	"validation-notitle": "User not found",
@@ -71,7 +71,7 @@ var messages = {
 	"status-error": "Due to an error, your unblock request could not be parsed. You can try to submit an unblock request manually by pasting the following on [[Special:MyTalk|your talk page]]:<br /><code>{{unblock | reason=Your reason here ~~" + "~~}}</code><br />If you are having difficulties, please [https://utrs-beta.wmflabs.org/ make a request through UTRS] and inform them of the issues you are encountering.",
 	"captcha-label": "Please enter the letters appearing in the box below",
 	"captcha-placeholder": "Enter the letters here",
-	"captcha-helptip": "CAPTCHA security check. Click \"Publish\" again when done.",
+	"captcha-helptip": "CAPTCHA security check. Click \"Submit\" again when done.",
 	"error-saving-main": "An error occurred ($1). Please try again or ask for help on your talk page.",
 	"error-main": "An error occurred ($1). Please try again or ask for help on your talk page.",
 	"copyright-notice": "<small>By publishing changes, you agree to the [[:foundation:Special:MyLanguage/Policy:Terms of Use|Terms of Use]], and you irrevocably agree to release your contribution under the [[Wikipedia:Text of the Creative Commons Attribution-ShareAlike 4.0 International License|CC BY-SA 4.0 License]] and the [[Wikipedia:Text of the GNU Free Documentation License|GFDL]]. You agree that a hyperlink or URL is sufficient attribution under the Creative Commons license.</small>"
