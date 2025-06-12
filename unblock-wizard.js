@@ -5,7 +5,7 @@
  * Used on [[Wikipedia:Unblock wizard]].
  * Loaded via [[mw:Snippets/Load JS and CSS by URL]].
  * 
- * Edits can be proposed via pinging Chaotic Enby somewhere.
+ * Edits can be proposed via pinging me somewhere.
  *
  * Author: [[User:Chaotic Enby]] (derived from a script by [[User:SD0001]])
  * Licence: MIT
@@ -24,7 +24,7 @@ $.when(
 		'mediawiki.widgets', 'oojs-ui-core', 'oojs-ui-widgets'
 	])
 ).then(function () {
-	if (!(mw.config.get('wgPageName').includes('Wikipedia:Unblock wizard/')) ||
+	if (!(mw.config.get('wgPageName').includes('Wikipedia:Unblock_wizard/') || mw.config.get('wgPageName').includes('User:Chaotic_Enby/Unblock_wizard/')) ||
 		mw.config.get('wgAction') !== 'view') {
 		return;
 	}
@@ -56,7 +56,7 @@ var messages = {
 	"username-label": "If you were blocked for having a promotional username, what new username do you want to pick?",
 	"clarification-label": "Is there anything specific you want to ask about your block?",
 	"submit-label": "Publish",
-	"footer-text": "<small>If you are not sure about what to enter in a field, you can skip it. If you need help, you can ask on <b>[[Special:MyTalk|your talkpage]]</b> with <b>{{[[Template:Help me|Help me]]}}</b> or get live help via <b>[[WP:IRCHELP|IRC]]</b> or <b>[[WP:DISCORD|Discord]]</b>.<br>Facing some issues in using this form? <b>[/w/index.php?title=User_talk:Chaotic_Enby&action=edit&section=new&preloadtitle=Issue%20with%20submission%20form&editintro=User_talk:Chaotic_Enby/editintro Report it]</b>.</small>",
+	"footer-text": "<small>If you are not sure about what to enter in a field, you can skip it. If you need help, you can ask on <b>[[Special:MyTalk|your talkpage]]</b> with <b>{{[[Template:Help me|Help me]]}}</b> or get live help via <b>[[WP:IRCHELP|IRC]]</b> or <b>[[WP:DISCORD|Discord]]</b>.<br>Facing some issues in using this form? <b>[/w/index.php?title=Wikipedia_talk:Unblock_wizard&action=edit&section=new&preloadtitle=Issue%20with%20submission%20form&editintro=Wikipedia_talk:Unblock_wizard/editintro Report it]</b>.</small>",
 	"submitting-as": "Submitting as User:$1",
 	"validation-notitle": "User not found",
 	"validation-invalidtitle": "User page does not exist.",
@@ -64,9 +64,10 @@ var messages = {
 	"status-processing": "Processing ...",
 	"status-saving": "Saving talk page ...",
 	"status-blank": "One or several required forms are missing.",
-	"editsummary-main": "Submitting using [[User:Chaotic Enby/Unblock wizard]]",
+	"editsummary-main": "Submitting using [[Wikipedia:Unblock wizard]]",
 	"status-redirecting": "Submission succeeded. Redirecting you to your talk page ...",
 	"status-redirecting-utrs": "Submission succeeded. Redirecting you to UTRS ...",
+	"status-not-blocked": "You are not autoblocked.",
 	"status-error": "Due to an error, your unblock request could not be parsed. You can try to submit an unblock request manually by pasting the following on [[Special:MyTalk|your talk page]]:<br /><code>{{unblock | reason=Your reason here ~~" + "~~}}</code><br />If you are having difficulties, please [https://utrs-beta.wmflabs.org/ make a request through UTRS] and inform them of the issues you are encountering.",
 	"captcha-label": "Please enter the letters appearing in the box below",
 	"captcha-placeholder": "Enter the letters here",
@@ -105,7 +106,7 @@ function init() {
 		},
 		ajax: {
 			headers: {
-				'Api-User-Agent': 'w:en:User:Chaotic Enby/Unblock wizard.js'
+				'Api-User-Agent': 'w:en:MediaWiki:Unblock-wizard.js'
 			}
 		}
 	};
@@ -373,6 +374,8 @@ function handleSubmit() {
 		setTimeout(function () {
 			location.href = "https://utrs-beta.wmflabs.org/public/appeal/account";
 		}, config.redirectionDelay);
+	} else if (blockType == "Autoblock" && !("id" in block)) {
+		setMainStatus('warning', msg('status-not-blocked'));
 	} else {
 		for(var [i, label] of questionLabels.entries()){
 			if(required[label] && !ui.itemsInput[i].getValue()){
