@@ -56,6 +56,7 @@ var messages = {
 	"username-label": "If you were blocked for having a promotional username, what new username do you want to pick?",
 	"clarification-label": "Is there anything specific you want to ask about your block?",
 	"submit-label": "Submit",
+	"utrs-label": "Go to UTRS",
 	"footer-text": "<small>If you are not sure about what to enter in a field, you can skip it. If you need help, you can ask on <b>[[Special:MyTalk|your talkpage]]</b> with <b>{{[[Template:Help me|Help me]]}}</b> or get live help via <b>[[WP:IRCHELP|IRC]]</b> or <b>[[WP:DISCORD|Discord]]</b>.<br>Facing some issues in using this form? <b>[/w/index.php?title=Wikipedia_talk:Unblock_wizard&action=edit&section=new&preloadtitle=Issue%20with%20submission%20form&editintro=Wikipedia_talk:Unblock_wizard/editintro Report it]</b>.</small>",
 	"submitting-as": "Submitting as User:$1",
 	"validation-notitle": "User not found",
@@ -66,7 +67,7 @@ var messages = {
 	"status-blank": "One or several required forms are missing.",
 	"editsummary-main": "Submitting using [[Wikipedia:Unblock wizard]]",
 	"status-redirecting": "Submission succeeded. Redirecting you to your talk page ...",
-	"status-redirecting-utrs": "Submission succeeded. Redirecting you to UTRS ...",
+	"status-redirecting-utrs": "Redirecting you to UTRS ...",
 	"status-not-blocked": "You are not currently blocked.",
 	"status-error": "Due to an error, your unblock request could not be parsed. You can try to submit an unblock request manually by pasting the following on [[Special:MyTalk|your talk page]]:<br /><code>{{unblock | reason=Your reason here ~~" + "~~}}</code><br />If you are having difficulties, please [https://utrs-beta.wmflabs.org/ make a request through UTRS] and inform them of the issues you are encountering.",
 	"captcha-label": "Please enter the letters appearing in the box below",
@@ -223,7 +224,7 @@ function constructUI() {
 	}
 	
 	ui.itemsLayout.push(ui.submitLayout = new OO.ui.FieldLayout(ui.submitButton = new OO.ui.ButtonWidget({
-			label: msg('submit-label'),
+			label: blockType == "IP_hardblock" ? msg('utrs-label') : msg('submit-label'),
 			flags: [ 'progressive', 'primary' ],
 		})));
 	
