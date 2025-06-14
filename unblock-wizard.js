@@ -67,7 +67,7 @@ var messages = {
 	"editsummary-main": "Submitting using [[Wikipedia:Unblock wizard]]",
 	"status-redirecting": "Submission succeeded. Redirecting you to your talk page ...",
 	"status-redirecting-utrs": "Submission succeeded. Redirecting you to UTRS ...",
-	"status-not-blocked": "You are not autoblocked.",
+	"status-not-blocked": "You are not currently blocked.",
 	"status-error": "Due to an error, your unblock request could not be parsed. You can try to submit an unblock request manually by pasting the following on [[Special:MyTalk|your talk page]]:<br /><code>{{unblock | reason=Your reason here ~~" + "~~}}</code><br />If you are having difficulties, please [https://utrs-beta.wmflabs.org/ make a request through UTRS] and inform them of the issues you are encountering.",
 	"captcha-label": "Please enter the letters appearing in the box below",
 	"captcha-placeholder": "Enter the letters here",
@@ -375,7 +375,7 @@ function handleSubmit() {
 		setTimeout(function () {
 			location.href = "https://utrs-beta.wmflabs.org/public/appeal/account";
 		}, config.redirectionDelay);
-	} else if (blockType == "Autoblock" && !("id" in block)) {
+	} else if (blockType != "IP" && !("id" in block)) {
 		setMainStatus('warning', msg('status-not-blocked'));
 	} else {
 		for(var [i, label] of questionLabels.entries()){
