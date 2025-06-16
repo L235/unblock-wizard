@@ -36,7 +36,12 @@ var block = {};
 
 // For each block template, links the relevant subpage
 var blockTemplates = {
-	"test": "test",
+	"uw-adblock": "Promo",
+	"uw-asblock": "Promo",
+	"uw-spamublock": "Promo",
+	"uw-soablock": "Promo",
+	"uw-sockblock": "Sockpuppet",
+	"uw-upeblock": "Promo",
 };
 
 function init() {
@@ -76,7 +81,7 @@ function init() {
 			block.id = userinfo.blockid;
 			block.by = userinfo.blockedby;
 			block.reason = userinfo.blockreason;
-			block.template = block.reason.match(/\{\{(.*)\}\}/)[1];
+			block.template = block.reason.match(/\{\{(.*)\}\}/)[1].toLowerCase();
 			return block.template;
 		}
 		return null;
