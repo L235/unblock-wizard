@@ -32,15 +32,15 @@ $.when(
 	init();
 });
 
+var block = {};
+
 // For each block template, links the relevant subpage
 var blockTemplates = {
 	"test": "test",
 };
 
 function init() {
-	for (var key in messages) {
-		mw.messages.set('afcsw-' + key, messages[key]);
-	}
+	console.log("a");
 	
 	var apiOptions = {
 		parameters: {
@@ -56,25 +56,23 @@ function init() {
 	
 	afc.api = new mw.Api(apiOptions);
 	afc.lookupApi = new mw.Api(apiOptions);
+	console.log("b");
 	
 	afc.lookupApi.get({
 		"action": "query",
 		"meta": "userinfo",
 		"uiprop": "blockinfo"
 	}).then( setBlockData ).then( function ( reason ) {
-		if(reason) {
+		console.log("reason");
+		if(reason && reason in blockTemplates) {
 			targetPage = mw.config.get('wgPageName') + '/' + blockTemplates[reason];
-			// TODO
+			location.href = location.href = mw.Title.newFromText( targetPage ).getUrl();
 		}
 	});
 	
 	function setBlockData(json) {
 		var userinfo = json.query.userinfo;
-		var errors = errorsFromPageData(userinfo);
-		if (errors.length) {
-			return null;
-		}
-		if("blockid" in userinfo){
+		if(userinfo && "blockid" in userinfo){
 			block.id = userinfo.blockid;
 			block.by = userinfo.blockedby;
 			block.reason = userinfo.blockreason;
