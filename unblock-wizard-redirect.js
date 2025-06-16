@@ -63,7 +63,7 @@ function init() {
 		"meta": "userinfo",
 		"uiprop": "blockinfo"
 	}).then( setBlockData ).then( function ( reason ) {
-		console.log("reason");
+		console.log(reason);
 		if(reason && reason in blockTemplates) {
 			targetPage = mw.config.get('wgPageName') + '/' + blockTemplates[reason];
 			location.href = location.href = mw.Title.newFromText( targetPage ).getUrl();
@@ -76,7 +76,8 @@ function init() {
 			block.id = userinfo.blockid;
 			block.by = userinfo.blockedby;
 			block.reason = userinfo.blockreason;
-			return block.reason;
+			block.template = block.reason.match(/\{\{(.*)\}\}/)[1];
+			return block.template;
 		}
 		return null;
 	}
