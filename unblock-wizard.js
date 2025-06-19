@@ -50,7 +50,7 @@ var messages = {
 	"other-label": "Is there anything else that may be helpful to your unblock request?",
 	"accounts-label": "Please list all accounts you have used besides this one.",
 	"so-label": "Have you taken the standard offer?",
-	"explain-promo-label": "Can you explain, in your own words, why your edits were not promotional?",
+	"explain-promo-label": "Can you explain, in your own words, why your edits were promotional?",
 	"coi-label": "What is your relationship with the subjects you have been editing about?",
 	"future-promo-label": "If you are unblocked, what topic areas will you edit in?",
 	"username-label": "If you were blocked for having a promotional username, what new username do you want to pick?",
