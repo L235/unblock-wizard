@@ -79,11 +79,12 @@ var messages = {
 };
 
 var infoLevels = {
-	"process": ["6/61", "Eo_circle_blue_caret-double-right.svg"],
-	"notice": ["9/93", "Eo_circle_amber_white_info.svg"],
-	"success": ["3/3b", "Eo_circle_green_checkmark.svg"],
-	"warning": ["9/93", "Eo_circle_amber_white_info.svg"],
-	"error": ["e/ee", "Eo_circle_red_no-entry.svg"],
+	"process": ["0/01", "OOjs_UI_icon_ellipsis-progressive.svg"],
+	"notice": ["4/4b", "OOjs_UI_icon_information-yellow.svg"],
+	"success": ["8/86", "OOjs_UI_icon_speechBubbleAdd-ltr-constructive.svg"],
+	"redirect": ["2/23", "OOjs_UI_icon_articleRedirect-ltr-progressive.svg"],
+	"warning": ["4/4b", "OOjs_UI_icon_information-yellow.svg"],
+	"error": ["4/4e", "OOjs_UI_icon_error-destructive.svg"],
 };
 
 var questionLabels = [];
@@ -381,7 +382,7 @@ function handleSubmit() {
 	ui.mainStatusLayout.scrollElementIntoView();
 	
 	if (blockType == "IP_hardblock") {
-		setMainStatus('success', msg('status-redirecting-utrs'));
+		setMainStatus('redirect', msg('status-redirecting-utrs'));
 		mw.track('counter.gadget_afcsw.submit_succeeded');
 		$(window).off('beforeunload', afc.beforeUnload);
 		setTimeout(function () {
