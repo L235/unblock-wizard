@@ -424,7 +424,7 @@ function handleSubmit() {
 		
 				setMainStatus('process', msg('status-saving'));
 				if (demoMode) {
-					setMainStatus('success', text);
+					setMainStatus('success', '<code style="display: block">' + text + '</code>');
 				} else {
 					saveUserTalkPage(userTalk, apiPage.revisions[0].slots.main.content + text).then(function () {
 						setMainStatus('success', msg('status-redirecting'));
@@ -572,6 +572,7 @@ function getJSONPage (page) {
  */
 function linkify(input) {
 	return input
+		.replace(/\{\{pb\}\}/g, '<br>')
 		.replace(
 			/\[\[:?(?:([^|\]]+?)\|)?([^\]|]+?)\]\]/g,
 			function(_, target, text) {
@@ -582,7 +583,7 @@ function linkify(input) {
 					'" title="' + target.replace(/"/g, '&#34;') + '">' + text + '</a>';
 			}
 		)
-		// for ext links, display tebext should be given
+		// for ext links, display text should be given
 		.replace(
 			/\[(\S*?) (.*?)\]/g,
 			function (_, target, text) {
