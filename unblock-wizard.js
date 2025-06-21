@@ -531,7 +531,7 @@ function prepareUserTalkText() {
 				unblock += "'''''" + msg(label + '-label') + "'''''" + "{{pb}}" + ui.itemsInput[i].getValue() + "{{pb}}";
 			}
 				
-			unblock += '}}~~' + '~~\n';
+			unblock += '}} ~~' + '~~\n';
 	}
 
 	return unblock;
