@@ -68,7 +68,7 @@ var messages = {
 	"editsummary-main": "Submitting using [[Wikipedia:Unblock wizard]]",
 	"status-redirecting": "Submission succeeded. Redirecting you to your talk page ...",
 	"status-redirecting-utrs": "Redirecting you to UTRS ...",
-	"status-not-blocked": "You are not currently blocked.",
+	"status-not-blocked": "You are not currently blocked. Click \"Confirm\" to activate demo mode, which will allow you to check out the workflow without posting a block request.",
 	"status-error": "Due to an error, your unblock request could not be parsed. You can try to submit an unblock request manually by pasting the following on [[Special:MyTalk|your talk page]]:<br /><code>{{unblock | reason=Your reason here ~~" + "~~}}</code><br />If you are having difficulties, please [https://utrs-beta.wmflabs.org/ make a request through UTRS] and inform them of the issues you are encountering.",
 	"captcha-label": "Please enter the letters appearing in the box below",
 	"captcha-placeholder": "Enter the letters here",
@@ -128,10 +128,13 @@ function init() {
 			demoMode = true;
 		}
 		console.log(blockType)
-		console.log(demoMode)
 		blockType = blockType[blockType.length - 1];
 		
+		if (blockType != "IP" && !("id" in block) && !demoMode) {
+			demoMode = confirm(msg('status-not-blocked'));
+		}
 		
+		console.log(demoMode)
 		switch (blockType) {
 			case "Sockpuppet":
 				questionLabels = ['accounts', 'so', 'other'];
@@ -358,20 +361,21 @@ function setMainStatus(type, message) {
 	if (mainPosition == -1) {
 		mainPosition = ui.fieldset.items.length;
 		ui.fieldset.addItems([
-			ui.mainStatusLayout = new OO.ui.FieldLayout(ui.mainStatusArea = new OO.ui.LabelWidget({
-			label: $('<tr>').append('<td style="vertical-align:top; padding-right: 5px;">' + imglink(infoLevels[type]) + '</td><td style="vertical-align:middle;">' + linkify(message)+ '</td>')
-			}), {
-				align: 'top'
+			ui.mainStatusLayout = new OO.ui.FieldsetLayout( {
+				align: 'top',
+				icon: type,
+				label: $("<span/>").append(linkify(message))
 			})
 		]);
 	} else {
-		ui.mainStatusArea.setLabel($('<tr>').append('<td style="vertical-align:top; padding-right: 5px;">' + imglink(infoLevels[type]) + '</td><td style="vertical-align:middle;">' + linkify(message)+ '</td>'));
+		ui.mainStatusLayout.setIcon(type);
+		ui.mainStatusLayout.setLabel($('<span/>').append(linkify(message)));
 	}
 }
 
 function handleSubmit() {
 
-	setMainStatus('process', msg('status-processing'));
+	setMainStatus('ellipsis', msg('status-processing'));
 	mw.track('counter.gadget_afcsw.submit_attempted');
 	ui.submitButton.setDisabled(true);
 	ui.mainStatusLayout.scrollElementIntoView();
@@ -383,8 +387,6 @@ function handleSubmit() {
 		setTimeout(function () {
 			location.href = "https://utrs-beta.wmflabs.org/public/appeal/account";
 		}, config.redirectionDelay);
-	} else if (blockType != "IP" && !("id" in block) && !demoMode) {
-		setMainStatus('warning', msg('status-not-blocked'));
 	} else {
 		for(var [i, label] of questionLabels.entries()){
 			if(required[label] && !ui.itemsInput[i].getValue()){
@@ -392,7 +394,7 @@ function handleSubmit() {
 			}
 		}
 		if (emptyFields && !emptyFieldsWarned) {
-			setMainStatus('warning', msg('status-blank'));
+			setMainStatus('alert', msg('status-blank'));
 			emptyFieldsWarned = true;
 			ui.submitButton.setDisabled(false);
 		} else {
@@ -422,7 +424,7 @@ function handleSubmit() {
 		
 				var text = prepareUserTalkText();
 		
-				setMainStatus('process', msg('status-saving'));
+				setMainStatus('ellipsis', msg('status-saving'));
 				if (demoMode) {
 					setMainStatus('success', '<code style="display: block">' + text + '</code>');
 				} else {
