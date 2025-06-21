@@ -80,10 +80,10 @@ var messages = {
 
 var infoLevels = {
 	"process": ["0/01", "OOjs_UI_icon_ellipsis-progressive.svg"],
-	"notice": ["9/99", "OOjs_UI_icon_alert-yellow.svg"],
+	"notice": ["4/4b", "OOjs_UI_icon_information-yellow.svg"],
 	"success": ["8/86", "OOjs_UI_icon_speechBubbleAdd-ltr-constructive.svg"],
 	"redirect": ["2/23", "OOjs_UI_icon_articleRedirect-ltr-progressive.svg"],
-	"warning": ["9/99", "OOjs_UI_icon_alert-yellow.svg"],
+	"warning": ["4/4b", "OOjs_UI_icon_information-yellow.svg"],
 	"error": ["4/4e", "OOjs_UI_icon_error-destructive.svg"],
 };
 
