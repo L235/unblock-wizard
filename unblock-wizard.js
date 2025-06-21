@@ -94,6 +94,7 @@ var blockType = '';
 var emptyFields = false;
 var emptyFieldsWarned = false;
 var mainPosition = -1;
+var demoMode = false;
 
 function init() {
 	for (var key in messages) {
@@ -123,7 +124,13 @@ function init() {
 		"uiprop": "blockinfo"
 	}).then( setBlockData ).then( function ( block ) {
 		blockType = mw.config.get('wgPageName').split('/');
+		if (blockType.includes("Demo")) {
+			demoMode = true;
+		}
+		console.log(blockType)
+		console.log(demoMode)
 		blockType = blockType[blockType.length - 1];
+		
 		
 		switch (blockType) {
 			case "Sockpuppet":
@@ -376,7 +383,7 @@ function handleSubmit() {
 		setTimeout(function () {
 			location.href = "https://utrs-beta.wmflabs.org/public/appeal/account";
 		}, config.redirectionDelay);
-	} else if (blockType != "IP" && !("id" in block)) {
+	} else if (blockType != "IP" && !("id" in block) && !demoMode) {
 		setMainStatus('warning', msg('status-not-blocked'));
 	} else {
 		for(var [i, label] of questionLabels.entries()){
@@ -413,29 +420,33 @@ function handleSubmit() {
 					return;
 				}
 		
-				var text = prepareUserTalkText(apiPage);
+				var text = prepareUserTalkText();
 		
 				setMainStatus('process', msg('status-saving'));
-				saveUserTalkPage(userTalk, text).then(function () {
-					setMainStatus('success', msg('status-redirecting'));
-					mw.track('counter.gadget_afcsw.submit_succeeded');
-		
-					$(window).off('beforeunload', afc.beforeUnload);
-					setTimeout(function () {
-						location.href = mw.util.getUrl(userTalk);
-					}, config.redirectionDelay);
-				}, function (code, err) {
-					if (code === 'captcha') {
-						ui.fieldset.removeItems([ui.mainStatusLayout, ui.talkStatusLayout]);
-						ui.captchaLayout.scrollElementIntoView();
-						mw.track('counter.gadget_afcsw.submit_captcha');
-					} else {
-						setMainStatus('error', msg('status-error'));
-						mw.track('counter.gadget_afcsw.submit_failed');
-						mw.track('counter.gadget_afcsw.submit_failed_' + code);
-					}
-					ui.submitButton.setDisabled(false);
-				});
+				if (demoMode) {
+					setMainStatus('success', '<code style="display: block">' + text + '</code>');
+				} else {
+					saveUserTalkPage(userTalk, apiPage.revisions[0].slots.main.content + text).then(function () {
+						setMainStatus('success', msg('status-redirecting'));
+						mw.track('counter.gadget_afcsw.submit_succeeded');
+			
+						$(window).off('beforeunload', afc.beforeUnload);
+						setTimeout(function () {
+							location.href = mw.util.getUrl(userTalk);
+						}, config.redirectionDelay);
+					}, function (code, err) {
+						if (code === 'captcha') {
+							ui.fieldset.removeItems([ui.mainStatusLayout, ui.talkStatusLayout]);
+							ui.captchaLayout.scrollElementIntoView();
+							mw.track('counter.gadget_afcsw.submit_captcha');
+						} else {
+							setMainStatus('error', msg('status-error'));
+							mw.track('counter.gadget_afcsw.submit_failed');
+							mw.track('counter.gadget_afcsw.submit_failed_' + code);
+						}
+						ui.submitButton.setDisabled(false);
+					});
+				}
 			}).catch(function (code, err) {
 				setMainStatus('error', msg('status-error'));
 				ui.submitButton.setDisabled(false);
@@ -494,9 +505,7 @@ function saveUserTalkPage(title, text) {
  * @param {Object} page - page information from the API
  * @returns {string} final talk page text to save
  */
-function prepareUserTalkText(page) {
-	var text = page.revisions[0].slots.main.content;
-
+function prepareUserTalkText() {
 	var unblock = '';
 	
 	// put unblock template
@@ -522,13 +531,10 @@ function prepareUserTalkText(page) {
 				unblock += "'''''" + msg(label + '-label') + "'''''" + "{{pb}}" + ui.itemsInput[i].getValue() + "{{pb}}";
 			}
 				
-			unblock += '}}~~' + '~~\n';
+			unblock += '}} ~~' + '~~\n';
 	}
 
-	// insert it at the bottom
-	text = text + unblock;
-
-	return text;
+	return unblock;
 }
 
 /**
@@ -566,6 +572,7 @@ function getJSONPage (page) {
  */
 function linkify(input) {
 	return input
+		.replace(/\{\{pb\}\}/g, '<br>')
 		.replace(
 			/\[\[:?(?:([^|\]]+?)\|)?([^\]|]+?)\]\]/g,
 			function(_, target, text) {
