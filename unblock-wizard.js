@@ -94,7 +94,7 @@ var blockType = '';
 var emptyFields = false;
 var emptyFieldsWarned = false;
 var mainPosition = -1;
-var demoMode = false;
+var demoMode = !!mw.util.getParamValue("demoMode");
 
 function init() {
 	for (var key in messages) {
