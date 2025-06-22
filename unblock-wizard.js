@@ -31,14 +31,13 @@ $.when(
 	init();
 });
 
-var afc = {}, ui = {}, block = {};
-window.afc = afc;
-afc.ui = ui;
+var wizard = {}, ui = {}, block = {};
+window.wizard = wizard;
+wizard.ui = ui;
 
 var config = {
 	debounceDelay: 500,
 	redirectionDelay: 1000,
-	defaultAfcTopic: 'other'
 };
 
 // TODO: move to a separate JSON subpage, would be feasible once [[phab:T198758]] is resolved
@@ -116,10 +115,10 @@ function init() {
 
 	// Two different API objects so that aborts on the lookupApi don't stop the final
 	// evaluate process
-	afc.api = new mw.Api(apiOptions);
-	afc.lookupApi = new mw.Api(apiOptions);
+	wizard.api = new mw.Api(apiOptions);
+	wizard.lookupApi = new mw.Api(apiOptions);
 	
-	afc.lookupApi.get({
+	wizard.lookupApi.get({
 		"action": "query",
 		"meta": "userinfo",
 		"uiprop": "blockinfo"
@@ -280,7 +279,7 @@ function constructUI() {
 	// The default font size in monobook and modern are too small at 10px
 	mw.util.addCSS('.skin-modern .projectTagOverlay, .skin-monobook .projectTagOverlay { font-size: 130%; }');
 
-	afc.beforeUnload = function (e) {
+	wizard.beforeUnload = function (e) {
 		var changedContent = false;
 		for (var [i, label] of questionLabels.entries()) {
 			if (ui.itemsInput[i].getValue() != "" && questionFields[label] != 2) {
@@ -296,11 +295,11 @@ function constructUI() {
 		e.returnValue = '';
 		return '';
 	};
-	$(window).on('beforeunload', afc.beforeUnload);
+	$(window).on('beforeunload', wizard.beforeUnload);
 }
 
 function initLookup() {
-	afc.lookupApi.abort(); // abort older API requests
+	wizard.lookupApi.abort(); // abort older API requests
 
 	var userTalk = "User talk:" + mw.config.get('wgUserName');
 	if (!mw.config.get('wgUserName')) { // empty
@@ -308,11 +307,9 @@ function initLookup() {
 	}
 
 	// re-initialize
-	afc.oresTopics = null;
-	afc.talktext = null;
-	afc.pagetext = null;
+	wizard.pagetext = null;
 
-	afc.lookupApi.get({
+	wizard.lookupApi.get({
 		"action": "query",
 		"prop": "revisions|description|info",
 		"titles": userTalk,
@@ -330,7 +327,7 @@ function setPrefillsFromPageData(json) {
 		return;
 	}
 
-	afc.pagetext = page.revisions[0].slots.main.content;
+	wizard.pagetext = page.revisions[0].slots.main.content;
 }
 
 /**
@@ -380,7 +377,7 @@ function handleSubmit() {
 	if (blockType == "IP_hardblock") {
 		setMainStatus('redirect', msg('status-redirecting-utrs'));
 		mw.track('counter.gadget_afcsw.submit_succeeded');
-		$(window).off('beforeunload', afc.beforeUnload);
+		$(window).off('beforeunload', wizard.beforeUnload);
 		setTimeout(function () {
 			location.href = "https://utrs-beta.wmflabs.org/public/appeal/account";
 		}, config.redirectionDelay);
@@ -404,7 +401,7 @@ function handleSubmit() {
 				return; // really get the ip please
 			}
 		
-			afc.api.get({
+			wizard.api.get({
 				"action": "query",
 				"prop": "revisions|description",
 				"titles": userTalk,
@@ -431,7 +428,7 @@ function handleSubmit() {
 						setMainStatus('success', msg('status-redirecting'));
 						mw.track('counter.gadget_afcsw.submit_succeeded');
 			
-						$(window).off('beforeunload', afc.beforeUnload);
+						$(window).off('beforeunload', wizard.beforeUnload);
 						setTimeout(function () {
 							location.href = mw.util.getUrl(userTalk);
 						}, config.redirectionDelay);
@@ -468,17 +465,17 @@ function saveUserTalkPage(title, text) {
 		"summary": msg('editsummary-main')
 	};
 	if (ui.captchaLayout && ui.captchaLayout.isElementAttached()) {
-		editParams.captchaid = afc.captchaid;
+		editParams.captchaid = wizard.captchaid;
 		editParams.captchaword = ui.captchaInput.getValue();
 		ui.fieldset.removeItems([ui.captchaLayout]);
 	}
-	return afc.api.postWithEditToken(editParams).then(function (data) {
+	return wizard.api.postWithEditToken(editParams).then(function (data) {
 		if (!data.edit || data.edit.result !== 'Success') {
 			if (data.edit && data.edit.captcha) {
 				// Handle captcha for non-confirmed users
 
 				var url = data.edit.captcha.url;
-				afc.captchaid = data.edit.captcha.id; // abuse of global?
+				wizard.captchaid = data.edit.captcha.id; // abuse of global?
 				ui.fieldset.addItems([
 					ui.captchaLayout = new OO.ui.FieldLayout(ui.captchaInput = new OO.ui.TextInputWidget({
 						placeholder: msg('captcha-placeholder'),
@@ -545,7 +542,7 @@ function prepareUserTalkText() {
  * @returns {jQuery.Promise<Record<string, any>>}
  **/
 function getJSONPage (page) {
-	return afc.api.get({
+	return wizard.api.get({
 		action: 'query',
 		titles: page,
 		prop: 'revisions',
