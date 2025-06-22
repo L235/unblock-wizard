@@ -98,7 +98,7 @@ var demoMode = false;
 
 function init() {
 	for (var key in messages) {
-		mw.messages.set('afcsw-' + key, messages[key]);
+		mw.messages.set('ubw-' + key, messages[key]);
 	}
 	
 	var apiOptions = {
@@ -269,8 +269,6 @@ function constructUI() {
 
 	// Attach
 	$('#unblock-wizard-container').empty().append(ui.fieldset.$element, ui.footerLayout.$element);
-	
-	mw.track('counter.gadget_afcsw.opened');
 
 	ui.submitButton.on('click', handleSubmit);
 
@@ -370,13 +368,11 @@ function setMainStatus(type, message) {
 function handleSubmit() {
 
 	setMainStatus('process', msg('status-processing'));
-	mw.track('counter.gadget_afcsw.submit_attempted');
 	ui.submitButton.setDisabled(true);
 	ui.mainStatusLayout.scrollElementIntoView();
 	
 	if (blockType == "IP_hardblock") {
 		setMainStatus('redirect', msg('status-redirecting-utrs'));
-		mw.track('counter.gadget_afcsw.submit_succeeded');
 		$(window).off('beforeunload', wizard.beforeUnload);
 		setTimeout(function () {
 			location.href = "https://utrs-beta.wmflabs.org/public/appeal/account";
@@ -426,7 +422,6 @@ function handleSubmit() {
 				} else {
 					saveUserTalkPage(userTalk, apiPage.revisions[0].slots.main.content + text).then(function () {
 						setMainStatus('success', msg('status-redirecting'));
-						mw.track('counter.gadget_afcsw.submit_succeeded');
 			
 						$(window).off('beforeunload', wizard.beforeUnload);
 						setTimeout(function () {
@@ -436,11 +431,8 @@ function handleSubmit() {
 						if (code === 'captcha') {
 							ui.fieldset.removeItems([ui.mainStatusLayout, ui.talkStatusLayout]);
 							ui.captchaLayout.scrollElementIntoView();
-							mw.track('counter.gadget_afcsw.submit_captcha');
 						} else {
 							setMainStatus('error', msg('status-error'));
-							mw.track('counter.gadget_afcsw.submit_failed');
-							mw.track('counter.gadget_afcsw.submit_failed_' + code);
 						}
 						ui.submitButton.setDisabled(false);
 					});
@@ -448,8 +440,6 @@ function handleSubmit() {
 			}).catch(function (code, err) {
 				setMainStatus('error', msg('status-error'));
 				ui.submitButton.setDisabled(false);
-				mw.track('counter.gadget_afcsw.submit_failed');
-				mw.track('counter.gadget_afcsw.submit_failed_' + code);
 			});
 		}
 	}
@@ -592,7 +582,7 @@ function linkify(input) {
 
 function msg(key) {
 	var messageArgs = Array.prototype.slice.call(arguments, 1);
-	return mw.msg.apply(mw, ['afcsw-' + key].concat(messageArgs));
+	return mw.msg.apply(mw, ['ubw-' + key].concat(messageArgs));
 }
 
 function makeErrorMessage(code, err) {
