@@ -223,7 +223,7 @@ function constructUI() {
 				break;
 		}
 		ui.itemsLayout.push(new OO.ui.FieldLayout(ui.itemsInput[ui.itemsInput.length - 1], {
-				label: msg(label + '-label'),
+				label: msg(label + '-label') + (required[label] ? " (*)" : ""),
 				align: 'top',
 				// help: msg(label + '-helptip'),
 				helpInline: true
