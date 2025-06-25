@@ -1,2 +1,2 @@
 - By [User:Chaotic Enby](https://en.wikipedia.org/wiki/User:Chaotic_Enby) (https://github.com/IlyasLebleu)
-- MIT License
+- MIT License (dual-licensed with CC-BY-SA 4.0 and GFDL 1.2)
