@@ -8,7 +8,7 @@
  * Edits can be proposed via [[Wikipedia talk:Unblock wizard]].
  *
  * Author: [[User:Chaotic Enby]] (derived from a script by [[User:SD0001]])
- * Licence: MIT
+ * Licence: MIT (dual-licensed with CC-BY-SA 4.0 and GFDL 1.2)
  */
 
 /* jshint maxerr: 999 */
