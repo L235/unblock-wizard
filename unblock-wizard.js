@@ -8,7 +8,7 @@
  * Edits can be proposed via [[Wikipedia talk:Unblock wizard]].
  *
  * Author: [[User:Chaotic Enby]] (derived from a script by [[User:SD0001]])
- * Licence: MIT
+ * Licence: MIT (dual-licensed with CC-BY-SA 4.0 and GFDL 1.2)
  */
 
 /* jshint maxerr: 999 */
@@ -56,9 +56,13 @@ var messages = {
 	"clarification-label": "Is there anything specific you want to ask about your block?",
 	"submit-label": "Submit",
 	"utrs-label": "Go to UTRS",
+<<<<<<< main
 	"utrs-necessary": "It is necessary to appeal your block via UTRS. This is because your talk page access is disabled. [https://utrs-beta.wmflabs.org/public/appeal/account Go to UTRS]",
 	"utrs-necessary-confirm": "It is necessary to appeal your block via UTRS. This is because your talk page access is disabled. Select \"Confirm\" to go to UTRS.",
 	"footer-text": "<small>If you are not sure about what to enter in a field, you can skip it. If you need help, you can ask on <b>[[Special:MyTalk|your talkpage]]</b> with <b>{{[[Template:Help me|Help me]]}}</b> or get live help via <b>[[WP:IRCHELP|IRC]]</b> or <b>[[WP:DISCORD|Discord]]</b>.<br>Facing some issues in using this form? <b>[/w/index.php?title=Wikipedia_talk:Unblock_wizard&action=edit&section=new&preloadtitle=Issue%20with%20submission%20form&editintro=Wikipedia_talk:Unblock_wizard/editintro Report it]</b>.</small>",
+=======
+	"footer-text": "<small>If you are not sure about what to enter in a field, you can skip it. If you need help, you can ask on <b>[[Special:MyTalk|your talkpage]]</b> with <b>{{[[Template:Help me|Help me]]}}</b> or get live help via <b>[[WP:IRCHELP|IRC]]</b>.<br>Facing some issues in using this form? <b>[/w/index.php?title=Wikipedia_talk:Unblock_wizard&action=edit&section=new&preloadtitle=Issue%20with%20submission%20form&editintro=Wikipedia_talk:Unblock_wizard/editintro Report it]</b>.</small>",
+>>>>>>> main
 	"submitting-as": "Submitting as User:$1",
 	"validation-notitle": "User not found",
 	"validation-invalidtitle": "User page does not exist.",
@@ -226,7 +230,7 @@ function constructUI() {
 				break;
 		}
 		ui.itemsLayout.push(new OO.ui.FieldLayout(ui.itemsInput[ui.itemsInput.length - 1], {
-				label: msg(label + '-label'),
+				label: msg(label + '-label') + (required[label] ? " (*)" : ""),
 				align: 'top',
 				// help: msg(label + '-helptip'),
 				helpInline: true
