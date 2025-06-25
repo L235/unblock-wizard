@@ -9,7 +9,7 @@
  * Edits can be proposed via [[Wikipedia talk:Unblock wizard]].
  *
  * Author: [[User:Chaotic Enby]] (derived from a script by [[User:SD0001]])
- * Licence: MIT (dual-licensed with CC-BY-SA 4.0 and GFDL 1.2)
+ * Licence: MIT
  */
 
 /* jshint maxerr: 999 */
@@ -92,13 +92,11 @@ function init() {
 	}).then( setBlockData ).then( function ( reason ) {
 		ui.itemsLayout = [];
 		if(reason && reason in blockTemplates) {
-			targetPage = mw.config.get('wgPageName') + '/' + blockTemplates[reason][0];
-			targetUrl = mw.Title.newFromText( targetPage ).getUrl();
 			ui.itemsLayout.push(new OO.ui.FieldLayout(new OO.ui.LabelWidget({
 				label: $('<div>').css("margin-top", "20px").append(linkify('<span style="font-size: 125%">Your current block status:</span><br><span style="font-size: 175%">Blocked for ' + blockTemplates[reason][1].toLowerCase() + '</span><br>' + blockTemplates[reason][2]))}), { align: 'top' }));
-			generateButton(ui.itemsLayout, "Appeal my " + blockTemplates[reason][1].toLowerCase() + " block", true);
-			generateButton(ui.itemsLayout, "Learn more about " + blockTemplates[reason][1].toLowerCase() + " blocks", true);
-			generateButton(ui.itemsLayout, "Appeal a different kind of block", false);
+			generateButton(ui.itemsLayout, "Appeal my " + blockTemplates[reason][1].toLowerCase() + " block", true, redirToPage(blockTemplates[reason][0]));
+			// generateButton(ui.itemsLayout, "Learn more about " + blockTemplates[reason][1].toLowerCase() + " blocks", true);
+			generateButton(ui.itemsLayout, "Appeal a different kind of block", false, activateDefaultMode);
 		}
 		else if(reason === null) { // Not blocked, this check is needed to avoid cases where the block reason is empty
 			// TODO: Perform a check on the underlying IP
@@ -110,7 +108,7 @@ function init() {
 			
 			// Link to demo mode
 			generateButton(ui.itemsLayout, "Enter demo mode", true, activateDemoMode);
-			generateButton(ui.itemsLayout, "My block was not detected", false, activateDemoMode);
+			generateButton(ui.itemsLayout, "My block was not detected", false, activateDefaultMode);
 		}
 		else {
 			// Link to the current buttons
