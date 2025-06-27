@@ -46,7 +46,7 @@ var blockTemplates = {
 	"uw-upeblock": ["Promo", "Undisclosed paid editing", false, "You have been blocked for making promotional edits to topics in which you have a financial stake, without adhering to the mandatory [[Wikipedia:Paid-contribution disclosure|paid editing disclosure requirements]]. Paid advocacy is a form of [[Wikipedia:Conflict of interest|conflict of interest]] (COI) editing which involves being compensated by a person, group, company or organization to use Wikipedia to promote their interests."],
 	"uw-ublock": ["Username", "", true, "Your account has been blocked from editing Wikipedia because your username does not comply with Wikipedia's [[Wikipedia:Username policy#Guidance for new users|username policy]]. Your username is the principal reason for your block, and you are welcome to continue editing after changing it."],
 	"uw-uhblock": ["", "", true, ""],
-	"uw-causeblock": ["", "", ""],
+	"uw-causeblock": ["", "", true, ""],
 	"uw-ublock-wellknown": ["", "", true, ""],
 	"uw-ublock-double": ["", "", true, ""],
 	"uw-uhblock-double": ["", "", true, ""],
