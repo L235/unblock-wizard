@@ -39,34 +39,34 @@ var demoMode = false;
 
 // For each block template, links the relevant subpage
 var blockTemplates = {
-	"anonblock": ["", "", ""],
-	"school block": ["", "", ""],
-	"rangeblock": ["", "", ""],
-	"blocked proxy": ["", "", ""],
-	"uw-upeblock": ["Promo", "Undisclosed paid editing", "You have been blocked for making promotional edits to topics in which you have a financial stake, without adhering to the mandatory [[Wikipedia:Paid-contribution disclosure|paid editing disclosure requirements]]. Paid advocacy is a form of [[Wikipedia:Conflict of interest|conflict of interest]] (COI) editing which involves being compensated by a person, group, company or organization to use Wikipedia to promote their interests."],
-	"uw-ublock": ["Username", "", "Your account has been blocked from editing Wikipedia because your username does not comply with Wikipedia's [[Wikipedia:Username policy#Guidance for new users|username policy]]. Your username is the principal reason for your block, and you are welcome to continue editing after changing it."],
-	"uw-uhblock": ["", "", ""],
+	"anonblock": ["", "", false, ""],
+	"school block": ["", "", false, ""],
+	"rangeblock": ["", "", false, ""],
+	"blocked proxy": ["", "", false, ""],
+	"uw-upeblock": ["Promo", "Undisclosed paid editing", false, "You have been blocked for making promotional edits to topics in which you have a financial stake, without adhering to the mandatory [[Wikipedia:Paid-contribution disclosure|paid editing disclosure requirements]]. Paid advocacy is a form of [[Wikipedia:Conflict of interest|conflict of interest]] (COI) editing which involves being compensated by a person, group, company or organization to use Wikipedia to promote their interests."],
+	"uw-ublock": ["Username", "", true, "Your account has been blocked from editing Wikipedia because your username does not comply with Wikipedia's [[Wikipedia:Username policy#Guidance for new users|username policy]]. Your username is the principal reason for your block, and you are welcome to continue editing after changing it."],
+	"uw-uhblock": ["", "", true, ""],
 	"uw-causeblock": ["", "", ""],
-	"uw-ublock-wellknown": ["", "", ""],
-	"uw-ublock-double": ["", "", ""],
-	"uw-uhblock-double": ["", "", ""],
-	"uw-softerblock": ["Username", "Promotional username", "You have been blocked because your username gives the impression that the account represents a group, team, club, organization, company, product, department, or website. Your username is the principal reason for your block, and you are welcome to continue editing after changing it."],
-	"uw-spamublock": ["Promo", "Promotional editing and username", "You have been blocked for [[WP:Spam|advertising or promotion]]. Also, your username gives the impression that the account represents a business, organisation, group, website, or role."],
-	"uw-spamblacklistblock": ["Promo", "Promotional editing", "You have been blocked for adding external links which are blocked by the [[Wikipedia:Spam blacklist|spam blacklist]]."],
-	"uw-vaublock": ["", "", ""],
-	"checkuser block": ["", "", ""],
-	"checkuserblock-wide": ["", "", ""],
-	"checkuserblock-account": ["", "", ""],
-	"tor": ["", "", ""],
-	"webhostblock": ["", "", ""],
-	"colocationwebhost": ["", "", ""],
-	"oversightblock": ["", "", ""],
+	"uw-ublock-wellknown": ["", "", true, ""],
+	"uw-ublock-double": ["", "", true, ""],
+	"uw-uhblock-double": ["", "", true, ""],
+	"uw-softerblock": ["Username", "Promotional username", true, "You have been blocked because your username gives the impression that the account represents a group, team, club, organization, company, product, department, or website. Your username is the principal reason for your block, and you are welcome to continue editing after changing it."],
+	"uw-spamublock": ["Promo", "Promotional editing and username", true, "You have been blocked for [[WP:Spam|advertising or promotion]]. Also, your username gives the impression that the account represents a business, organisation, group, website, or role."],
+	"uw-spamblacklistblock": ["Promo", "Promotional editing", false, "You have been blocked for adding external links which are blocked by the [[Wikipedia:Spam blacklist|spam blacklist]]."],
+	"uw-vaublock": ["", "", true, ""],
+	"checkuser block": ["", "", false, ""],
+	"checkuserblock-wide": ["", "", false, ""],
+	"checkuserblock-account": ["", "", false, ""],
+	"tor": ["", "", false, ""],
+	"webhostblock": ["", "", false, ""],
+	"colocationwebhost": ["", "", false, ""],
+	"oversightblock": ["", "", false, ""],
 	// The following are not in the default menu at [[MediaWiki:Ipbreason-dropdown]]
-	"uw-adblock": ["Promo", "Promotional editing", "You have been blocked for [[Wikipedia:What Wikipedia is not#Wikipedia is not a soapbox|advertising or self-promoting]] in violation of the [[Wikipedia:Conflict of interest|conflict of interest]] and [[Wikipedia:Notability (organizations and companies)|notability]] guidelines."],
-	"uw-sblock": ["Promo", "Promotional editing", "You have been blocked for adding [[Wikipedia:Spam|spam]] links."],
-	"uw-asblock": ["Promo", "Promotional editing", "You have been blocked for adding [[Wikipedia:Spam|spam]] links."],
-	"uw-soablock": ["Promo", "Promotional editing", "You have been blocked because your account is being used only for [[Wikipedia:Spam|advertising or promotion]]."],
-	"uw-sockblock": ["Sockpuppet", "Sockpuppetry", "You have been blocked for [[Wikipedia:Sockpuppetry|abusing multiple accounts]]. Note that multiple accounts are [[Wikipedia:Sockpuppetry#Legitimate uses|allowed]], but <b>not for [[Wikipedia:Sockpuppetry#Inappropriate uses of alternative accounts|illegitimate]] reasons</b>."],
+	"uw-adblock": ["Promo", "Promotional editing", false, "You have been blocked for [[Wikipedia:What Wikipedia is not#Wikipedia is not a soapbox|advertising or self-promoting]] in violation of the [[Wikipedia:Conflict of interest|conflict of interest]] and [[Wikipedia:Notability (organizations and companies)|notability]] guidelines."],
+	"uw-sblock": ["Promo", "Promotional editing", false, "You have been blocked for adding [[Wikipedia:Spam|spam]] links."],
+	"uw-asblock": ["Promo", "Promotional editing", false, "You have been blocked for adding [[Wikipedia:Spam|spam]] links."],
+	"uw-soablock": ["Promo", "Promotional editing", false, "You have been blocked because your account is being used only for [[Wikipedia:Spam|advertising or promotion]]."],
+	"uw-sockblock": ["Sockpuppet", "Sockpuppetry", false, "You have been blocked for [[Wikipedia:Sockpuppetry|abusing multiple accounts]]. Note that multiple accounts are [[Wikipedia:Sockpuppetry#Legitimate uses|allowed]], but <b>not for [[Wikipedia:Sockpuppetry#Inappropriate uses of alternative accounts|illegitimate]] reasons</b>."],
 };
 
 function init() {
@@ -93,7 +93,7 @@ function init() {
 		ui.itemsLayout = [];
 		if(reason && reason in blockTemplates) {
 			ui.itemsLayout.push(new OO.ui.FieldLayout(new OO.ui.LabelWidget({
-				label: $('<div>').css("margin-top", "20px").append(linkify('<span style="font-size: 125%">Your current block status:</span><br><span style="font-size: 175%">Blocked for ' + blockTemplates[reason][1].toLowerCase() + '</span><br>' + blockTemplates[reason][2]))}), { align: 'top' }));
+				label: $('<div>').css("margin-top", "20px").append(linkify('<span style="font-size: 125%">Your current block status:</span><br><span style="font-size: 175%">Blocked for ' + blockTemplates[reason][1].toLowerCase() + '</span><br>' + blockTemplates[reason][3]))}), { align: 'top' }));
 			generateButton(ui.itemsLayout, "Appeal my " + blockTemplates[reason][1].toLowerCase() + " block", true, redirToPage(blockTemplates[reason][0]));
 			// generateButton(ui.itemsLayout, "Learn more about " + blockTemplates[reason][1].toLowerCase() + " blocks", true);
 			generateButton(ui.itemsLayout, "Appeal a different kind of block", false, activateDefaultMode);
