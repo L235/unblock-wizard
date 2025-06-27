@@ -169,6 +169,7 @@ function init() {
 		generateButton(ui.itemsLayout, "I was blocked for promotional activity", true, redirToPage("Promo", args));
 		generateButton(ui.itemsLayout, "I was \"automatically blocked\"", true, redirToPage("Autoblock", args));
 		generateButton(ui.itemsLayout, "My IP address has been blocked", true, redirToPage("IP hardblock", args));
+		generateButton(ui.itemsLayout, "I was blocked only because of my username", true, redirToPage("Username", args));
 		generateButton(ui.itemsLayout, "I was blocked for something else", true, redirToPage("Other", args));
 		generateButton(ui.itemsLayout, "I was blocked globally", true, redirToExtLink("https://meta.wikimedia.org/wiki/Stewards/Wizard", args));
 		generateButton(ui.itemsLayout, "I would like to know why I was blocked", false, redirToPage("Clarification", args));
