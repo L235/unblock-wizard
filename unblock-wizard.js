@@ -516,16 +516,23 @@ function prepareUserTalkText() {
 				unblock += '\n{{Help me}}\n' + 'I would like a more detailed explanation for my block.' + '\n~~' + '~~';
 			}
 			break;
+		case "Username":
+			unblock += '\n{{unblock-un|username=' + ui.itemsInput[0].getValue() + '}} ~~' + '~~\n';
+			break;
 		default:
-			unblock += '\n{{unblock|reason=';
+			unblockStart = '\n{{unblock|reason=';
 			
 			for(var [i, label] of questionLabels.entries()){
 				if(required[label] || ui.itemsInput[i].getValue()) {
-					unblock += "'''''" + msg(label + '-label') + "'''''" + "{{pb}}" + ui.itemsInput[i].getValue() + "{{pb}}";
+					if(label == "username") {
+						unblockStart = '\n{{unblock-un|username=' + ui.itemsInput[i].getValue() + '|reason=';
+					} else {
+						unblock += "'''''" + msg(label + '-label') + "'''''" + "{{pb}}" + ui.itemsInput[i].getValue() + "{{pb}}";
+					}
 				}
 			}
 				
-			unblock += '}} ~~' + '~~\n';
+			unblock = unblockStart + unblock + '}} ~~' + '~~\n';
 	}
 
 	return unblock;
