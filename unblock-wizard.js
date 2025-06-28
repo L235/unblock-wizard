@@ -520,7 +520,9 @@ function prepareUserTalkText() {
 			unblock += '\n{{unblock|reason=';
 			
 			for(var [i, label] of questionLabels.entries()){
-				unblock += "'''''" + msg(label + '-label') + "'''''" + "{{pb}}" + ui.itemsInput[i].getValue() + "{{pb}}";
+				if(required[label] || ui.itemsInput[i].getValue()) {
+					unblock += "'''''" + msg(label + '-label') + "'''''" + "{{pb}}" + ui.itemsInput[i].getValue() + "{{pb}}";
+				}
 			}
 				
 			unblock += '}} ~~' + '~~\n';
