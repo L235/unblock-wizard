@@ -94,7 +94,7 @@ function init() {
 		if(reason && reason in blockTemplates) {
 			ui.itemsLayout.push(new OO.ui.FieldLayout(new OO.ui.LabelWidget({
 				label: $('<div>').css("margin-top", "20px").append(linkify('<span style="font-size: 125%">Your current block status:</span><br><span style="font-size: 175%">Blocked for ' + blockTemplates[reason][1].toLowerCase() + '</span><br>' + blockTemplates[reason][3]))}), { align: 'top' }));
-			generateButton(ui.itemsLayout, "Appeal my " + blockTemplates[reason][1].toLowerCase() + " block", true, redirToPage(blockTemplates[reason][0]));
+			generateButton(ui.itemsLayout, "Appeal my " + blockTemplates[reason][1].toLowerCase() + " block", true, redirToPage(blockTemplates[reason][0], (blockTemplates[reason][2] ? "usernameBlock=true" : "")));
 			// generateButton(ui.itemsLayout, "Learn more about " + blockTemplates[reason][1].toLowerCase() + " blocks", true);
 			generateButton(ui.itemsLayout, "Appeal a different kind of block", false, activateDefaultMode);
 		}
