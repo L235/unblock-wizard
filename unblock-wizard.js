@@ -140,11 +140,7 @@ function init() {
 				questionLabels = ['accounts', 'so', 'other'];
 				break;
 			case "Promo":
-				if(true) { // to replace by an api call to check if the block is username-related
-					questionLabels = ['explain-promo', 'coi', 'future-promo', 'username', 'other'];
-				} else {
-					questionLabels = ['explain-promo', 'coi', 'future-promo', 'other'];
-				}
+				questionLabels = ['explain-promo', 'coi', 'future-promo', 'other'];
 				break;
 			case "Autoblock":
 				questionLabels = [];
