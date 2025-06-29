@@ -96,6 +96,7 @@ var emptyFields = false;
 var emptyFieldsWarned = false;
 var mainPosition = -1;
 var demoMode = !!mw.util.getParamValue("demoMode");
+var usernameBlock = !!mw.util.getParamValue("usernameBlock");
 
 function init() {
 	for (var key in messages) {
@@ -161,6 +162,10 @@ function init() {
 				break;
 			default:
 				questionLabels = [];
+		}
+		
+		if(usernameBlock && blockType != "Username") {
+			questionLabels = ['username'].concat(questionLabels);
 		}
 	
 		document.title = msg('document-title');
