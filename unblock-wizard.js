@@ -40,6 +40,9 @@ var config = {
 	redirectionDelay: 1000,
 };
 
+var demoMode = !!mw.util.getParamValue("demoMode");
+var usernameBlock = mw.util.getParamValue("usernameBlock");
+
 // TODO: move to a separate JSON subpage, would be feasible once [[phab:T198758]] is resolved
 var messages = {
 	"document-title": "Wikipedia Unblock Wizard",
@@ -52,7 +55,7 @@ var messages = {
 	"explain-promo-label": "Can you explain, in your own words, why your edits were promotional?",
 	"coi-label": "What is your relationship with the subjects you have been editing about?",
 	"future-promo-label": "If you are unblocked, what topic areas will you edit in?",
-	"username-label": "If you were blocked for having a promotional username, what new username do you want to pick?",
+	"username-label": (usernameBlock == "required" ? "What new username do you want to pick?" : "If your username was an issue, what new username do you want to pick?"),
 	"standalone-username-label": "What new username do you want to pick?",
 	"clarification-label": "Is there anything specific you want to ask about your block?",
 	"submit-label": "Submit",
@@ -89,14 +92,12 @@ var infoLevels = {
 
 var questionLabels = [];
 var questionFields = {'explain': 0, 'future': 0, 'other': 0, 'accounts': 0, 'so': 2, 'explain-promo': 0, 'coi': 0, 'future-promo': 0, 'username': 1, 'clarification': 0, 'standalone-username': 1};
-var required = {'explain': true, 'future': true, 'other': false, 'accounts': true, 'so': true, 'explain-promo': true, 'coi': true, 'future-promo': true, 'username': false, 'clarification': false, 'standalone-username': true};
+var required = {'explain': true, 'future': true, 'other': false, 'accounts': true, 'so': true, 'explain-promo': true, 'coi': true, 'future-promo': true, 'username': (usernameBlock == "required"), 'clarification': false, 'standalone-username': true};
 
 var blockType = '';
 var emptyFields = false;
 var emptyFieldsWarned = false;
 var mainPosition = -1;
-var demoMode = !!mw.util.getParamValue("demoMode");
-var usernameBlock = !!mw.util.getParamValue("usernameBlock");
 
 function init() {
 	for (var key in messages) {
