@@ -3,7 +3,7 @@
 
 # unblock-wizard-redirect.js
 
-This is the "pilot" script, executed on [Wikipedia:Unblock wizard](https://en.wikipedia.org/wiki/Wikipedia:Unblock_wizard). It serves to identify whether a user is blocked, and which block template has been used, to redirect them to the relevant page if possible. Access to other block forms (or to demo mode) is also possible from here.
+This is the "pilot" script, executed on [Wikipedia:Unblock wizard](https://en.wikipedia.org/wiki/Wikipedia:Unblock_wizard). It serves to identify whether a user is blocked, and which block template has been used, to redirect them to the relevant page if possible. It also provides a way to access demo mode, where the changes will be given as raw code but not added to the user talk page, and a comprehensive menu linking to the various unblock forms.
 
 # unblock-wizard.js
 
