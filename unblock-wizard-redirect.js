@@ -44,12 +44,12 @@ var blockTemplates = {
 	"rangeblock": ["", "", false, ""],
 	"blocked proxy": ["", "", false, ""],
 	"uw-upeblock": ["Promo", "Undisclosed paid editing", false, "You have been blocked for making promotional edits to topics in which you have a financial stake, without adhering to the mandatory [[Wikipedia:Paid-contribution disclosure|paid editing disclosure requirements]]. Paid advocacy is a form of [[Wikipedia:Conflict of interest|conflict of interest]] (COI) editing which involves being compensated by a person, group, company or organization to use Wikipedia to promote their interests."],
-	"uw-ublock": ["Username", "Username", true, "You have been blocked because your username does not comply with Wikipedia's [[Wikipedia:Username policy#Guidance for new users|username policy]]. Your username is the principal reason for your block, and you are welcome to continue editing after changing it."],
-	"uw-uhblock": ["Other", "Disruptive username", true, "You have been blocked because your username is a clear violation of Wikipedia's [[Wikipedia:Username policy#Guidance for new users|username policy]]."],
-	"uw-causeblock": ["", "", true, ""],
-	"uw-ublock-wellknown": ["Username", "Similar username", true, "You have been blocked because your username appears to be [[WP:IMPERSONATION|too similar to the username]] of another Wikipedia account. Your username is the principal reason for your block, and you are welcome to continue editing after changing it."],
-	"uw-ublock-double": ["", "", true, ""],
-	"uw-uhblock-double": ["", "", true, ""],
+	"uw-ublock": ["Username", "Issues with your username", true, "You have been blocked because your username does not comply with Wikipedia's [[Wikipedia:Username policy#Guidance for new users|username policy]]. Your username is the principal reason for your block, and you are welcome to continue editing after changing it."],
+	"uw-uhblock": ["Other", "Having a disruptive username", true, "You have been blocked because your username is a clear violation of Wikipedia's [[Wikipedia:Username policy#Guidance for new users|username policy]]."],
+	"uw-causeblock": ["Username", "Having a promotional username", true, "You have been blocked because your username appears to represent an organization, product, or website.  Your username is the principal reason for your block, and you are welcome to continue editing after changing it."],
+	"uw-ublock-wellknown": ["Username", "Using a well-known name as username", true, "You have been blocked because your username matches the name of a well-known, living person. If you are the person in question and choose to keep your current username, please send an email to <b>info-en@wikimedia.org</b> including your real name and your Wikipedia username to receive instructions from our [[WP:VRT|volunteer response team]] about account verification. Please do not send documentation without being requested to do so. If you are not the person in question, you are welcome to continue editing after changing your username."],
+	"uw-ublock-double": ["Username", "Having a similar username", true, "You have been blocked because your username appears to be [[WP:IMPERSONATION|too similar to the username]] of another Wikipedia account. Your username is the principal reason for your block, and you are welcome to continue editing after changing it."],
+	"uw-uhblock-double": ["Other", "Impersonation", true, "You have been blocked because your username appears to be [[WP:IMPERSONATION|too similar to the username]] of another Wikipedia account."],
 	"uw-softerblock": ["Username", "Promotional username", true, "You have been blocked because your username gives the impression that the account represents a group, team, club, organization, company, product, department, or website. Your username is the principal reason for your block, and you are welcome to continue editing after changing it."],
 	"uw-spamublock": ["Promo", "Promotional editing and username", true, "You have been blocked for [[WP:Spam|advertising or promotion]]. Also, your username gives the impression that the account represents a business, organisation, group, website, or role."],
 	"uw-spamblacklistblock": ["Promo", "Promotional editing", false, "You have been blocked for adding external links which are blocked by the [[Wikipedia:Spam blacklist|spam blacklist]]."],
@@ -94,8 +94,14 @@ function init() {
 		if(reason && reason in blockTemplates) {
 			ui.itemsLayout.push(new OO.ui.FieldLayout(new OO.ui.LabelWidget({
 				label: $('<div>').css("margin-top", "20px").append(linkify('<span style="font-size: 125%">Your current block status:</span><br><span style="font-size: 175%">Blocked for ' + blockTemplates[reason][1].toLowerCase() + '</span><br>' + blockTemplates[reason][3]))}), { align: 'top' }));
-			generateButton(ui.itemsLayout, "Appeal my " + blockTemplates[reason][1].toLowerCase() + " block", true, redirToPage(blockTemplates[reason][0], (blockTemplates[reason][2] ? "usernameBlock=required" : "")));
-			// generateButton(ui.itemsLayout, "Learn more about " + blockTemplates[reason][1].toLowerCase() + " blocks", true);
+			if(reason == "uw-ublock-wellknown") {
+				generateButton(ui.itemsLayout, "Email VRT", true, redirToExtLink("mailto:info-en@wikimedia.org"));
+			}
+			if(blockTemplates[reason][0] == "Username"){
+				generateButton(ui.itemsLayout, "Change my username", true, redirToPage("Username"));
+			} else {
+				generateButton(ui.itemsLayout, "Appeal my " + blockTemplates[reason][1].toLowerCase() + " block", true, redirToPage(blockTemplates[reason][0], (blockTemplates[reason][2] ? "usernameBlock=required" : "")));
+			}
 			generateButton(ui.itemsLayout, "Appeal a different kind of block", false, activateDefaultMode);
 		}
 		else if(reason === null) { // Not blocked, this check is needed to avoid cases where the block reason is empty
