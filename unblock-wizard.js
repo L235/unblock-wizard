@@ -161,7 +161,7 @@ function init() {
 				questionLabels = [];
 		}
 		
-		if(usernameBlock && blockType != "Username") {
+		if(usernameBlock && blockType != "Username" && blockType != "Clarification") {
 			questionLabels = ['username'].concat(questionLabels);
 		}
 	
