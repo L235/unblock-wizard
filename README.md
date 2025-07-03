@@ -9,4 +9,13 @@ This is the "pilot" script, executed on [Wikipedia:Unblock wizard](https://en.wi
 
 This script deals with the unblock forms themselves, and is executed on subpages of [Wikipedia:Unblock wizard](https://en.wikipedia.org/wiki/Wikipedia:Unblock_wizard). Arguments (such as demo mode, or the presence of a username field) are passed through the URL from the other script.
 
-The following forms are available:
+The following unblock forms are available:
+* Username
+* Promotional editing
+* Sockpuppetry
+* Autoblock
+* IP hardblock
+* IP block
+* Generic unblock request
+
+A help form is also available, adding the {{Help me}} template instead of an unblock request.
