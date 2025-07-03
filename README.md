@@ -8,3 +8,5 @@ This is the "pilot" script, executed on [Wikipedia:Unblock wizard](https://en.wi
 # unblock-wizard.js
 
 This script deals with the unblock forms themselves, and is executed on subpages of [Wikipedia:Unblock wizard](https://en.wikipedia.org/wiki/Wikipedia:Unblock_wizard). Arguments (such as demo mode, or the presence of a username field) are passed through the URL from the other script.
+
+The following forms are available:
