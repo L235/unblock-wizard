@@ -84,14 +84,14 @@ var messages = {
 	"copyright-notice": "<small>By publishing changes, you agree to the [[:foundation:Special:MyLanguage/Policy:Terms of Use|Terms of Use]], and you irrevocably agree to release your contribution under the [[Wikipedia:Text of the Creative Commons Attribution-ShareAlike 4.0 International License|CC BY-SA 4.0 License]] and the [[Wikipedia:Text of the GNU Free Documentation License|GFDL]]. You agree that a hyperlink or URL is sufficient attribution under the Creative Commons license.</small>"
 };
 
-var infoLevels = {
-	"process": ["0/01", "OOjs_UI_icon_ellipsis-progressive.svg"],
-	"notice": ["4/4b", "OOjs_UI_icon_information-yellow.svg"],
-	"success": ["8/86", "OOjs_UI_icon_speechBubbleAdd-ltr-constructive.svg"],
-	"redirect": ["2/23", "OOjs_UI_icon_articleRedirect-ltr-progressive.svg"],
-	"warning": ["4/4b", "OOjs_UI_icon_information-yellow.svg"],
-	"error": ["4/4e", "OOjs_UI_icon_error-destructive.svg"],
-};
+// var infoLevels = {
+// 	"process": ["0/01", "OOjs_UI_icon_ellipsis-progressive.svg"],
+// 	"notice": ["4/4b", "OOjs_UI_icon_information-yellow.svg"],
+// 	"success": ["8/86", "OOjs_UI_icon_speechBubbleAdd-ltr-constructive.svg"],
+// 	"redirect": ["2/23", "OOjs_UI_icon_articleRedirect-ltr-progressive.svg"],
+// 	"warning": ["4/4b", "OOjs_UI_icon_information-yellow.svg"],
+// 	"error": ["4/4e", "OOjs_UI_icon_error-destructive.svg"],
+// };
 
 var questionLabels = [];
 var questionFields = {'explain': 0, 'future': 0, 'other': 0, 'accounts': 0, 'so': 2, 'explain-promo': 0, 'coi': 0, 'future-promo': 0, 'username': 1, 'clarification': 0, 'standalone-username': 1};
@@ -397,7 +397,7 @@ function handleSubmit() {
 	
 	var text = prepareUserTalkText();
 	if (blockType == "IP_hardblock") {
-		setMainStatus('redirect', msg('status-redirecting-utrs'));
+		setMainStatus('', msg('status-redirecting-utrs'));
 		$(window).off('beforeunload', wizard.beforeUnload);
 		setTimeout(function () {
 			location.href = "https://utrs-beta.wmflabs.org/public/appeal/account";
