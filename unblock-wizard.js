@@ -60,7 +60,13 @@ var messages = {
 	"clarification-label": "Is there anything specific you want to ask about your block?",
 	"submit-label": "Submit",
 	"utrs-label": "Go to UTRS",
+<<<<<<< main
+	"utrs-necessary": "It is necessary to appeal your block via UTRS. This is because your talk page access is disabled. [https://utrs-beta.wmflabs.org/public/appeal/account Go to UTRS]",
+	"utrs-necessary-confirm": "It is necessary to appeal your block via UTRS. This is because your talk page access is disabled. Select \"Confirm\" to go to UTRS.",
+	"footer-text": "<small>If you are not sure about what to enter in a field, you can skip it. If you need help, you can ask on <b>[[Special:MyTalk|your talkpage]]</b> with <b>{{[[Template:Help me|Help me]]}}</b> or get live help via <b>[[WP:IRCHELP|IRC]]</b> or <b>[[WP:DISCORD|Discord]]</b>.<br>Facing some issues in using this form? <b>[/w/index.php?title=Wikipedia_talk:Unblock_wizard&action=edit&section=new&preloadtitle=Issue%20with%20submission%20form&editintro=Wikipedia_talk:Unblock_wizard/editintro Report it]</b>.</small>",
+=======
 	"footer-text": "<small>If you are not sure about what to enter in a field, you can skip it. If you need help, you can ask on <b>[[Special:MyTalk|your talkpage]]</b> with <b>{{[[Template:Help me|Help me]]}}</b> or get live help via <b>[[WP:IRCHELP|IRC]]</b>.<br>Facing some issues in using this form? <b>[/w/index.php?title=Wikipedia_talk:Unblock_wizard&action=edit&section=new&preloadtitle=Issue%20with%20submission%20form&editintro=Wikipedia_talk:Unblock_wizard/editintro Report it]</b>.</small>",
+>>>>>>> main
 	"submitting-as": "Submitting as User:$1",
 	"validation-notitle": "User not found",
 	"validation-invalidtitle": "User page does not exist.",
@@ -72,7 +78,8 @@ var messages = {
 	"status-redirecting": "Submission succeeded. Redirecting you to your talk page ...",
 	"status-redirecting-utrs": "Redirecting you to UTRS ...",
 	"status-not-blocked": "You are not currently blocked.",
-	"status-error": "Due to an error, your unblock request could not be parsed. You can try to submit an unblock request manually by pasting the following on [[Special:MyTalk|your talk page]]:<br /><code>{{unblock | reason=Your reason here ~~" + "~~}}</code><br />If you are having difficulties, please [https://utrs-beta.wmflabs.org/ make a request through UTRS] and inform them of the issues you are encountering.",
+	"status-not-blocked-confirm": "You are not currently blocked. Select \"Confirm\" to activate demo mode, which will allow you to check out the workflow without posting a block request.",
+	"status-error": "Due to an error, your unblock request could not be parsed. You can try to submit an unblock request manually by pasting the following on [[Special:MyTalk|your talk page]]:<br /><code>$1</code><br />If you are having difficulties, please [https://utrs-beta.wmflabs.org/ make a request through UTRS] and inform them of the issues you are encountering.",
 	"captcha-label": "Please enter the letters appearing in the box below",
 	"captcha-placeholder": "Enter the letters here",
 	"captcha-helptip": "CAPTCHA security check. Click \"Submit\" again when done.",
@@ -131,9 +138,7 @@ function init() {
 			demoMode = true;
 		}
 		console.log(blockType)
-		console.log(demoMode)
 		blockType = blockType[blockType.length - 1];
-		
 		
 		switch (blockType) {
 			case "Sockpuppet":
@@ -182,9 +187,10 @@ function init() {
 	});
 }
 
-function setBlockData(json) {
+async function setBlockData(json) {
 	var userinfo = json.query.userinfo;
 	var errors = errorsFromPageData(userinfo);
+	block.target = userinfo.name;
 	if (errors.length) {
 		return block;
 	}
@@ -192,6 +198,7 @@ function setBlockData(json) {
 		block.id = userinfo.blockid;
 		block.by = userinfo.blockedby;
 		block.reason = userinfo.blockreason;
+		block.notalk = userinfo.blockowntalk;
 	}
 	return block;
 }
@@ -237,9 +244,9 @@ function constructUI() {
 	}
 	
 	ui.itemsLayout.push(ui.submitLayout = new OO.ui.FieldLayout(ui.submitButton = new OO.ui.ButtonWidget({
-			label: blockType == "IP_hardblock" ? msg('utrs-label') : msg('submit-label'),
-			flags: [ 'progressive', 'primary' ],
-		})));
+		label: blockType == "IP_hardblock" ? msg('utrs-label') : msg('submit-label'),
+		flags: [ 'progressive', 'primary' ],
+	})));
 	
 	if(copyrightEligible){
 		ui.itemsLayout.push(new OO.ui.FieldLayout(new OO.ui.LabelWidget({
@@ -263,7 +270,7 @@ function constructUI() {
 	});
 
 	var asUser = mw.util.getParamValue('username');
-	if (asUser && asUser !== mw.config.get('wgUserName')) {
+	if (asUser && asUser !== block.target) {
 		ui.fieldset.addItems([
 			new OO.ui.FieldLayout(new OO.ui.MessageWidget({
 				type: 'notice',
@@ -276,9 +283,24 @@ function constructUI() {
 	// Attach
 	$('#unblock-wizard-container').empty().append(ui.fieldset.$element, ui.footerLayout.$element);
 
-	ui.submitButton.on('click', handleSubmit);
 
 	initLookup();
+
+	if (blockType != "IP" && !("id" in block) && !demoMode) {
+		setMainStatus('warning', msg('status-not-blocked'));
+		demoMode = confirm(msg('status-not-blocked-confirm'));
+		console.log(demoMode)
+	}
+
+	if (block.notalk) {
+		ui.submitButton.setDisabled(true);
+		setMainStatus('error', msg('utrs-necessary'));
+		if (confirm(msg("utrs-necessary-confirm"))) {
+			location.href = "https://utrs-beta.wmflabs.org/public/appeal/account";
+		}
+	} else {
+		ui.submitButton.on('click', handleSubmit);
+	}
 
 	// The default font size in monobook and modern are too small at 10px
 	mw.util.addCSS('.skin-modern .projectTagOverlay, .skin-monobook .projectTagOverlay { font-size: 130%; }');
@@ -305,10 +327,7 @@ function constructUI() {
 function initLookup() {
 	wizard.lookupApi.abort(); // abort older API requests
 
-	var userTalk = "User talk:" + mw.config.get('wgUserName');
-	if (!mw.config.get('wgUserName')) { // empty
-		return; // here we should get the ip or something
-	}
+	var userTalk = "User talk:" + block.target;
 
 	// re-initialize
 	wizard.pagetext = null;
@@ -360,31 +379,33 @@ function setMainStatus(type, message) {
 	if (mainPosition == -1) {
 		mainPosition = ui.fieldset.items.length;
 		ui.fieldset.addItems([
-			ui.mainStatusLayout = new OO.ui.FieldLayout(ui.mainStatusArea = new OO.ui.LabelWidget({
-			label: $('<tr>').append('<td style="vertical-align:top; padding-right: 5px;">' + imglink(infoLevels[type]) + '</td><td style="vertical-align:middle;">' + linkify(message)+ '</td>')
-			}), {
-				align: 'top'
+			ui.mainLabel = new OO.ui.MessageWidget( {
+				align: 'top',
+				type: type,
+				label: $("<span/>").append(linkify(message))
 			})
 		]);
 	} else {
-		ui.mainStatusArea.setLabel($('<tr>').append('<td style="vertical-align:top; padding-right: 5px;">' + imglink(infoLevels[type]) + '</td><td style="vertical-align:middle;">' + linkify(message)+ '</td>'));
+		ui.mainLabel.setType(type);
+		ui.mainLabel.setLabel($('<span/>').append(linkify(message)));
 	}
 }
 
 function handleSubmit() {
-
-	setMainStatus('process', msg('status-processing'));
+	if (ui.submitButton.isDisabled()) {
+		return;
+	}
+	setMainStatus('', msg('status-processing'));
 	ui.submitButton.setDisabled(true);
-	ui.mainStatusLayout.scrollElementIntoView();
+	ui.mainLabel.scrollElementIntoView();
 	
+	var text = prepareUserTalkText();
 	if (blockType == "IP_hardblock") {
 		setMainStatus('redirect', msg('status-redirecting-utrs'));
 		$(window).off('beforeunload', wizard.beforeUnload);
 		setTimeout(function () {
 			location.href = "https://utrs-beta.wmflabs.org/public/appeal/account";
 		}, config.redirectionDelay);
-	} else if (blockType != "IP" && !("id" in block) && !demoMode) {
-		setMainStatus('warning', msg('status-not-blocked'));
 	} else {
 		for(var [i, label] of questionLabels.entries()){
 			if(required[label] && !ui.itemsInput[i].getValue()){
@@ -396,9 +417,9 @@ function handleSubmit() {
 			emptyFieldsWarned = true;
 			ui.submitButton.setDisabled(false);
 		} else {
-			var userTalk = "User talk:" + mw.config.get('wgUserName');
-			if (!mw.config.get('wgUserName')) { // empty
-				ui.fieldset.removeItems([ui.mainStatusLayout]);
+			var userTalk = "User talk:" + block.target;
+			if (!block.target) { // empty
+				ui.fieldset.removeItems([ui.mainLabel]);
 				ui.submitButton.setDisabled(false);
 				return; // really get the ip please
 			}
@@ -414,15 +435,13 @@ function handleSubmit() {
 		
 				var errors = errorsFromPageData(apiPage);
 				if (errors.length) {
-					// ui.fieldset.removeItems([ui.mainStatusLayout]);
+					// ui.fieldset.removeItems([ui.mainLabel]);
 					ui.submitButton.setDisabled(false);
-					setMainStatus('error', msg('status-error'));
+					setMainStatus('error', msg('status-error').replace("$1", text));
 					return;
 				}
 		
-				var text = prepareUserTalkText();
-		
-				setMainStatus('process', msg('status-saving'));
+				setMainStatus('', msg('status-saving'));
 				if (demoMode) {
 					setMainStatus('success', '<code style="display: block">' + text + '</code>');
 				} else {
@@ -435,16 +454,16 @@ function handleSubmit() {
 						}, config.redirectionDelay);
 					}, function (code, err) {
 						if (code === 'captcha') {
-							ui.fieldset.removeItems([ui.mainStatusLayout, ui.talkStatusLayout]);
+							ui.fieldset.removeItems([ui.mainLabel, ui.talkStatusLayout]);
 							ui.captchaLayout.scrollElementIntoView();
 						} else {
-							setMainStatus('error', msg('status-error'));
+							setMainStatus('error', msg('status-error').replace('$1', text));
 						}
 						ui.submitButton.setDisabled(false);
 					});
 				}
 			}).catch(function (code, err) {
-				setMainStatus('error', msg('status-error'));
+				setMainStatus('error', msg('status-error').replace("$1", text));
 				ui.submitButton.setDisabled(false);
 			});
 		}
