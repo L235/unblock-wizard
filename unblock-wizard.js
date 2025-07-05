@@ -162,7 +162,7 @@ function init() {
 				questionLabels = [];
 		}
 		
-		if(usernameBlock && blockType != "Username" && blockType != "Clarification") {
+		if(usernameBlock && blockType != "Username" && blockType != "Clarification" && blockType != "IP_hardblock" && blockType != "Autoblock"  && blockType != "IP") {
 			questionLabels = ['username'].concat(questionLabels);
 		}
 	
