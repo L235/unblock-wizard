@@ -549,7 +549,7 @@ function prepareUserTalkText() {
 				}
 			}
 				
-			unblock = unblockStart + unblock + '}} ~~' + '~~\n';
+			unblock = unblockStart + "<small>The following request was written through the [[Wikipedia:Unblock wizard|unblock wizard]]</small>\n" + unblock + '}} ~~' + '~~\n';
 	}
 
 	return unblock;
