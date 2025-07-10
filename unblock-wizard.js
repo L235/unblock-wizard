@@ -74,7 +74,7 @@ var messages = {
 	"status-redirecting": "Submission succeeded. Redirecting you to your talk page ...",
 	"status-redirecting-utrs": "Redirecting you to UTRS ...",
 	"status-not-blocked": "You are not currently blocked.",
-	"status-not-blocked-confirm": "You are not currently blocked. Select \"Confirm\" to activate demo mode, which will allow you to check out the workflow without posting a block request.",
+	"status-not-blocked-confirm": "You are not currently blocked. Select \"OK\" to activate demo mode, which will allow you to check out the workflow without posting a block request.",
 	"status-error": "Due to an error, your unblock request could not be parsed. You can try to submit an unblock request manually by pasting the following on [[Special:MyTalk|your talk page]]:<br /><code>$1</code><br />If you are having difficulties, please [https://utrs-beta.wmflabs.org/ make a request through UTRS] and inform them of the issues you are encountering.",
 	"captcha-label": "Please enter the letters appearing in the box below",
 	"captcha-placeholder": "Enter the letters here",
