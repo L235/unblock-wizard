@@ -534,7 +534,7 @@ function prepareUserTalkText() {
 			}
 			break;
 		case "Username":
-			unblock += '\n{{unblock-un|username=' + ui.itemsInput[0].getValue() + '}} ~~' + '~~\n';
+			unblock += '\n{{unblock-un|username=' + ui.itemsInput[0].getValue() + ' ~~' + '~~ }}\n';
 			break;
 		default:
 			unblockStart = '\n{{unblock|reason=';
@@ -549,7 +549,7 @@ function prepareUserTalkText() {
 				}
 			}
 				
-			unblock = unblockStart + "<small>The following request was written through the [[Wikipedia:Unblock wizard|unblock wizard]].</small>\n" + unblock + '}} ~~' + '~~\n';
+			unblock = unblockStart + "<small>The following request was written through the [[Wikipedia:Unblock wizard|unblock wizard]].</small>\n" + unblock + ' ~~' + '~~}}\n';
 	}
 
 	return unblock;
