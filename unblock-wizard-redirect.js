@@ -89,10 +89,12 @@ function init() {
 		"action": "query",
 		"meta": "userinfo",
 		"uiprop": "blockinfo"
-	}).then( setBlockData ).then( function ( reason ) {
+	}).then( setBlockData ).then( function ( data ) {
+		reason = data[0]
+		userinfo = data[1]
 		ui.itemsLayout = [];
 		if(reason && reason in blockTemplates) {
-			if(blockTemplates[reason][0] != "" && (blockTemplates[reason][0] != "IP hardblock" || true)){ // Placeholder for logged-in check
+			if(blockTemplates[reason][0] != "" && (blockTemplates[reason][0] != "IP hardblock" || !("anon" in userinfo))){
 				ui.itemsLayout.push(new OO.ui.FieldLayout(new OO.ui.LabelWidget({
 					label: $('<div>').css("margin-top", "20px").append(linkify('<span style="font-size: 125%">Your current block status:</span><br><span style="font-size: 175%">' + blockTemplates[reason][1] + '</span><br>' + blockTemplates[reason][3]))}), { align: 'top' }));
 				if(reason == "uw-ublock-wellknown") {
@@ -190,7 +192,7 @@ function init() {
 			block.by = userinfo.blockedby;
 			block.reason = userinfo.blockreason;
 			block.template = block.reason.match(/\{\{(.*)\}\}/)[1].toLowerCase();
-			return block.template;
+			return [block.template, userinfo];
 		}
 		return null;
 	}
