@@ -194,7 +194,7 @@ function init() {
 			block.template = block.reason.match(/\{\{(.*)\}\}/)[1].toLowerCase();
 			return [block.template, userinfo];
 		}
-		return null;
+		return [null, userinfo];
 	}
 }
 
