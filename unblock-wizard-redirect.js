@@ -54,9 +54,9 @@ var blockTemplates = {
 	"uw-spamublock": ["Promo", "Blocked for promotional editing and username", true, "You have been blocked for [[WP:Spam|advertising or promotion]]. Also, your username gives the impression that the account represents a business, organisation, group, website, or role."],
 	"uw-spamblacklistblock": ["Promo", "Blocked for promotional editing", false, "You have been blocked for adding external links which are blocked by the [[Wikipedia:Spam blacklist|spam blacklist]]."],
 	"uw-vaublock": ["Other", "Blocked for vandalism and disruptive username", true, "You have been blocked because [[Wikipedia:Vandalism-only account|it is being used only for vandalism]], and because your username is a clear violation of Wikipedia's [[Wikipedia:Username policy#Guidance for new users|username policy]]."],
-	"checkuser block": ["", "", false, ""],
-	"checkuserblock-wide": ["", "", false, ""],
-	"checkuserblock-account": ["", "", false, ""],
+	"checkuser block": ["IP hardblock", "IP block based on technical evidence", false, "This IP address or network has been blocked as technical evidence indicates it was used for disruption."],
+	"checkuserblock-wide": ["IP hardblock", "IP rangeblock based on technical evidence", false, "This IP network has been blocked as technical evidence indicates it was used for disruption."],
+	"checkuserblock-account": ["Sockpuppet", "Blocked for sockpuppetry", false, "You have been blocked for [[WP:SOCK|inappropriate use of alternate accounts]] based on technical evidence. Please log in, [[Special:CreateAccount|create]], or [[WP:ACC|request an account]]."],
 	"tor": ["", "", false, ""],
 	"webhostblock": ["", "", false, ""],
 	"colocationwebhost": ["", "", false, ""],
@@ -102,6 +102,8 @@ function init() {
 				}
 				if(blockTemplates[reason][0] == "Username"){
 					generateButton(ui.itemsLayout, "Change my username", true, redirToPage("Username"));
+				} else if(blockTemplates[reason][0] == "IP hardblock"){
+					generateButton(ui.itemsLayout, "Request an IP block exemption", true, redirToPage("IP hardblock"));
 				} else {
 					generateButton(ui.itemsLayout, "Appeal my block", true, redirToPage(blockTemplates[reason][0], (blockTemplates[reason][2] ? "usernameBlock=required" : "")));
 				}
