@@ -52,7 +52,7 @@ var messages = {
 	"submit-label": "Submit",
 	"utrs-necessary": "It is necessary to appeal your block via UTRS. This is because your talk page access is disabled. [[Wikipedia:UTRS|Learn more about UTRS]]]",
 	"utrs-necessary-confirm": "It is necessary to appeal your block via UTRS. This is because your talk page access is disabled. Select \"Confirm\" to learn more about UTRS.",
-	"footer-text": "<small>If you are not sure about what to enter in a field, you can skip it. If you need help, you can ask on <b>[[Special:MyTalk|your talkpage]]</b> with <b>{{[[Template:Help me|Help me]]}}</b> or get live help via <b>[[WP:IRCHELP|IRC]]</b>.<br>Facing some issues in using this form? <b>[/w/index.php?title=Wikipedia_talk:Unblock_wizard&action=edit&section=new&preloadtitle=Issue%20with%20submission%20form&editintro=Wikipedia_talk:Unblock_wizard/editintro Report it]</b>.</small>",
+	"footer-text": "<small>If you are not sure about what to enter in a field, you can skip it. If you need help, you can ask on <b>[[Special:MyTalk|your talkpage]]</b> with <b>{{[[Template:Help me|Help me]]}}</b> or get live help via <b>[[WP:IRCHELP|IRC]]</b>.<br>Facing some issues in using this form? <b>Report it in {{irc|wikipedia-en-unblock}}</b>.</small>",
 	"submitting-as": "Submitting as User:$1",
 	"validation-notitle": "User not found",
 	"validation-invalidtitle": "User page does not exist.",
