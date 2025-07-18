@@ -52,7 +52,7 @@ var messages = {
 	"submit-label": "Submit",
 	"utrs-necessary": "It is necessary to appeal your block via UTRS. This is because your talk page access is disabled. [[Wikipedia:UTRS|Learn more about UTRS]]]",
 	"utrs-necessary-confirm": "It is necessary to appeal your block via UTRS. This is because your talk page access is disabled. Select \"Confirm\" to learn more about UTRS.",
-	"footer-text": "<small>If you are not sure about what to enter in a field, you can skip it. If you need help, you can ask on <b>[[Special:MyTalk|your talkpage]]</b> with <b>{{[[Template:Help me|Help me]]}}</b> or get live help via <b>[[WP:IRCHELP|IRC]]</b>.<br>Facing some issues in using this form? <b>Report it in {{irc|wikipedia-en-unblock}}</b>.</small>",
+	"footer-text": "<small>If you are not sure about what to enter in a field, you can skip it. If you need help, you can ask on <b>[[Special:MyTalk|your talkpage]]</b> with <b>{{[[Template:Help me|Help me]]}}</b> or get live help via <b>[[WP:IRCHELP|IRC]]</b>.<br>Facing some issues in using this form? <b>Report it in {{irc|wikipedia-en-unblock}} on [[WP:IRC|IRC]], in <span style=\"font-family:monospace;\">#technical</span> on [[Wikipedia:Discord|Discord]], or through an issue/pull request on [https://github.com/L235/unblock-wizard GitHub]</b>.</small>",
 	"submitting-as": "Submitting as User:$1",
 	"validation-notitle": "User not found",
 	"validation-invalidtitle": "User page does not exist.",
@@ -73,6 +73,7 @@ var messages = {
 	"error-main": "An error occurred ($1). Please try again or ask for help on your talk page.",
 	"copyright-notice": `<small>${mw.message('wikimedia-copyrightwarning').plain()}</small>`,
 };
+var messagesCache = {};
 
 // var infoLevels = {
 // 	"process": ["0/01", "OOjs_UI_icon_ellipsis-progressive.svg"],
@@ -92,11 +93,26 @@ var emptyFields = false;
 var emptyFieldsWarned = false;
 var mainPosition = -1;
 
+async function parseAndCacheMsg(key, ...messageArgs) {
+	if (messagesCache[key] && [...messageArgs].length == 0) {
+		return messagesCache[key];
+	}
+	return await new mw.Api().parse("<div>" + mw.message('ubw-' + key, ...messageArgs).plain() + "</div>").then(function (parsedMsg) {
+		if ([...messageArgs].length == 0) {
+			messagesCache[key] = $(parsedMsg).find("div").eq(0).html();
+		}
+		return $(parsedMsg).find("div").eq(0).html();
+	});
+}
+
 function init() {
 	for (var key in messages) {
 		mw.messages.set('ubw-' + key, messages[key]);
 	}
-	
+
+	for (var key in messages) {
+		parseAndCacheMsg(key);
+	}
 	var apiOptions = {
 		parameters: {
 			format: 'json',
@@ -118,7 +134,7 @@ function init() {
 		"action": "query",
 		"meta": "userinfo",
 		"uiprop": "blockinfo"
-	}).then( setBlockData ).then( function ( block ) {
+	}).then( setBlockData ).then( async function ( block ) {
 		blockType = mw.config.get('wgPageName').split('/');
 		if (blockType.includes("Demo")) {
 			demoMode = true;
@@ -156,8 +172,8 @@ function init() {
 			questionLabels = ['username'].concat(questionLabels);
 		}
 	
-		document.title = msg('document-title');
-		$('#firstHeading').text(msg('page-title'));
+		document.title = await msg('document-title');
+		$('#firstHeading').text(await msg('page-title'));
 		
 		mw.util.addCSS(
 			// CSS adjustments for vector-2022: hide prominent page controls which are
@@ -189,7 +205,7 @@ async function setBlockData(json) {
 	return block;
 }
 
-function constructUI() {
+async function constructUI() {
 	ui.itemsLayout = [];
 	ui.itemsInput = [];
 	
@@ -199,7 +215,7 @@ function constructUI() {
 		switch(questionFields[label]) {
 			case 0:
 				ui.itemsInput.push(new OO.ui.MultilineTextInputWidget({
-						// placeholder: msg(label + '-placeholder'),
+						// placeholder: await msg(label + '-placeholder'),
 						multiline: true,
 						autosize: true,
 					}));
@@ -207,7 +223,7 @@ function constructUI() {
 				break;
 			case 1:
 				ui.itemsInput.push(new OO.ui.TextInputWidget({
-						// placeholder: msg(label + '-placeholder'),
+						// placeholder: await msg(label + '-placeholder'),
 						maxLength: 85,
 					}));
 				copyrightEligible = true;
@@ -222,22 +238,22 @@ function constructUI() {
 				break;
 		}
 		ui.itemsLayout.push(new OO.ui.FieldLayout(ui.itemsInput[ui.itemsInput.length - 1], {
-				label: msg(label + '-label') + (required[label] ? " (*)" : ""),
+				label: await msg(label + '-label') + (required[label] ? " (*)" : ""),
 				align: 'top',
-				// help: msg(label + '-helptip'),
+				// help: await msg(label + '-helptip'),
 				helpInline: true
 			}));
 	}
 	
 	ui.itemsLayout.push(ui.submitLayout = new OO.ui.FieldLayout(ui.submitButton = new OO.ui.ButtonWidget({
-		label: msg('submit-label'),
+		label: await msg('submit-label'),
 		flags: [ 'progressive', 'primary' ],
 	})));
 	
 	if(copyrightEligible){
 		ui.itemsLayout.push(new OO.ui.FieldLayout(new OO.ui.LabelWidget({
 			label: $('<div>')
-				.append(linkify(msg('copyright-notice')))
+				.append(linkify(await msgParsed('copyright-notice')))
 		}), {
 			align: 'top'
 		}));
@@ -250,7 +266,7 @@ function constructUI() {
 
 	ui.footerLayout = new OO.ui.FieldLayout(new OO.ui.LabelWidget({
 		label: $('<div>')
-			.append(linkify(msg('footer-text')))
+			.append(linkify(await msgParsed('footer-text')))
 	}), {
 		align: 'top'
 	});
@@ -261,7 +277,7 @@ function constructUI() {
 			new OO.ui.FieldLayout(new OO.ui.MessageWidget({
 				type: 'notice',
 				inline: true,
-				label: msg('submitting-as', asUser)
+				label: await msg('submitting-as', asUser)
 			}))
 		], /* position */ 5); // just before submit button
 	}
@@ -273,16 +289,16 @@ function constructUI() {
 	initLookup();
 
 	if (blockType != "IP" && !("id" in block) && !demoMode) {
-		setMainStatus('warning', msg('status-not-blocked'));
-		demoMode = confirm(msg('status-not-blocked-confirm'));
+		setMainStatus('warning', await msgParsed('status-not-blocked'));
+		demoMode = confirm(await msg('status-not-blocked-confirm'));
 		console.log(demoMode)
 	}
 
 	if (block.notalk) {
 		ui.submitButton.setDisabled(true);
-		setMainStatus('error', msg('utrs-necessary'));
-		if (confirm(msg("utrs-necessary-confirm"))) {
-			location.href = "/wiki/Wikipedia:UTRS";
+		setMainStatus('error', await msgParsed('utrs-necessary'));
+		if (confirm(await msg("utrs-necessary-confirm"))) {
+			location.href = mw.config.get("wgArticlePath").replace("$1", "Wikipedia:UTRS");
 		}
 	} else {
 		ui.submitButton.on('click', handleSubmit);
@@ -343,12 +359,12 @@ function setPrefillsFromPageData(json) {
  * @param {Object} page - from query API response
  * @returns {string[]}
  */
-function errorsFromPageData(page) {
+async function errorsFromPageData(page) {
 	if (!page || page.invalid) {
-		return [msg('validation-invalidtitle')];
+		return [await msg('validation-invalidtitle')];
 	}
 	if (page.missing) {
-		return [msg('validation-missingtitle')];
+		return [await msg('validation-missingtitle')];
 	}
 	return [];
 }
@@ -373,11 +389,11 @@ function setMainStatus(type, message) {
 	}
 }
 
-function handleSubmit() {
+async function handleSubmit() {
 	if (ui.submitButton.isDisabled()) {
 		return;
 	}
-	setMainStatus('', msg('status-processing'));
+	setMainStatus('', await msgParsed('status-processing'));
 	ui.submitButton.setDisabled(true);
 	ui.mainLabel.scrollElementIntoView();
 	
@@ -389,7 +405,7 @@ function handleSubmit() {
 		}
 	}
 	if (emptyFields && !emptyFieldsWarned) {
-		setMainStatus('warning', msg('status-blank'));
+		setMainStatus('warning', await msgParsed('status-blank'));
 		emptyFieldsWarned = true;
 		ui.submitButton.setDisabled(false);
 	} else {
@@ -406,60 +422,60 @@ function handleSubmit() {
 			"titles": userTalk,
 			"rvprop": "content",
 			"rvslots": "main",
-		}).then(function (json) {
+		}).then(async function (json) {
 			var apiPage = json.query.pages[0];
 	
 			var errors = errorsFromPageData(apiPage);
 			if (errors.length) {
 				// ui.fieldset.removeItems([ui.mainLabel]);
 				ui.submitButton.setDisabled(false);
-				setMainStatus('error', msg('status-error').replace("$1", text).replace('$2', url));
+				setMainStatus('error', await msgParsed('status-error', text, url));
 				return;
 			}
 	
-			setMainStatus('', msg('status-saving'));
+			setMainStatus('', await msg('status-saving'));
 			if (demoMode) {
 				setMainStatus('success', 'Wikitext: <code style="display: block">' + text + '</code>\n\nPreload URL: <a href=\"' + url + '\" target=\"_blank\">' + url.replace("&", "&amp;").replace("<", "&lt;") + '</a>');
 			} else {
-				saveUserTalkPage(userTalk, apiPage.revisions[0].slots.main.content + text).then(function () {
-					setMainStatus('success', msg('status-redirecting'));
+				saveUserTalkPage(userTalk, apiPage.revisions[0].slots.main.content + text).then(async function () {
+					setMainStatus('success', await msgParsed('status-redirecting'));
 		
 					$(window).off('beforeunload', wizard.beforeUnload);
 					setTimeout(function () {
 						location.href = mw.util.getUrl(userTalk);
 					}, config.redirectionDelay);
-				}, function (code, err) {
+				}, async function (code, err) {
 					if (code === 'captcha') {
 						ui.fieldset.removeItems([ui.mainLabel, ui.talkStatusLayout]);
 						ui.captchaLayout.scrollElementIntoView();
 					} else {
-						setMainStatus('error', msg('status-error').replace('$1', text).replace('$2', url));
+						setMainStatus('error', await msgParsed('status-error', text, url));
 					}
 					ui.submitButton.setDisabled(false);
 				});
 			}
-		}).catch(function (code, err) {
-			setMainStatus('error', msg('status-error').replace("$1", text).replace("$2", url));
+		}).catch(async function (code, err) {
+			setMainStatus('error', await msgParsed('status-error', text, url));
 			ui.submitButton.setDisabled(false);
 		});
 	}
 }
 
-function saveUserTalkPage(title, text) {
+async function saveUserTalkPage(title, text) {
 
 	// TODO: handle edit conflict
 	var editParams = {
 		"action": "edit",
 		"title": title,
 		"text": text,
-		"summary": msg('editsummary-main')
+		"summary": await msg('editsummary-main')
 	};
 	if (ui.captchaLayout && ui.captchaLayout.isElementAttached()) {
 		editParams.captchaid = wizard.captchaid;
 		editParams.captchaword = ui.captchaInput.getValue();
 		ui.fieldset.removeItems([ui.captchaLayout]);
 	}
-	return wizard.api.postWithEditToken(editParams).then(function (data) {
+	return wizard.api.postWithEditToken(editParams).then(async function (data) {
 		if (!data.edit || data.edit.result !== 'Success') {
 			if (data.edit && data.edit.captcha) {
 				// Handle captcha for non-confirmed users
@@ -468,13 +484,13 @@ function saveUserTalkPage(title, text) {
 				wizard.captchaid = data.edit.captcha.id; // abuse of global?
 				ui.fieldset.addItems([
 					ui.captchaLayout = new OO.ui.FieldLayout(ui.captchaInput = new OO.ui.TextInputWidget({
-						placeholder: msg('captcha-placeholder'),
+						placeholder: await msg('captcha-placeholder'),
 						required: true
 					}), {
 						warnings: [ new OO.ui.HtmlSnippet('<img src=' + url + '>') ],
-						label: msg('captcha-label'),
+						label: await msg('captcha-label'),
 						align: 'top',
-						help: msg('captcha-helptip'),
+						help: await msg('captcha-helptip'),
 						helpInline: true,
 					}),
 				], /* position */ 6); // just after submit button // TODO: fix number
@@ -489,7 +505,7 @@ function saveUserTalkPage(title, text) {
 	});
 }
 
-function prepareUserTalkPageLink() {
+async function prepareUserTalkPageLink() {
 	var url = new URL(location.origin + mw.config.get("wgArticlePath").replace("$1", "User_talk:" + mw.config.get("wgUserName")));
 	url.searchParams.set("action", "edit");
 	url.searchParams.set("section", "new");
@@ -529,7 +545,7 @@ function prepareUserTalkPageLink() {
 						url.searchParams.set("preload", `Template:Unblock-un/preload`);
 						url.searchParams.append("preloadparams[1]", ui.itemsInput[i].getValue());
 					} else {
-						reason += "'''''" + msg(label + '-label') + "'''''" + "{{pb}}" + ui.itemsInput[i].getValue() + "{{pb}}";
+						reason += "'''''" + await msg(label + '-label') + "'''''" + "{{pb}}" + ui.itemsInput[i].getValue() + "{{pb}}";
 					}
 				}
 			}
@@ -542,7 +558,7 @@ function prepareUserTalkPageLink() {
  * @param {Object} page - page information from the API
  * @returns {string} final talk page text to save
  */
-function prepareUserTalkText() {
+async function prepareUserTalkText() {
 	var unblock = '';
 	
 	// put unblock template
@@ -572,7 +588,7 @@ function prepareUserTalkText() {
 					if(label == "username") {
 						unblockStart = '\n{{unblock-un|1=' + ui.itemsInput[i].getValue() + '|reason=';
 					} else {
-						unblock += "'''''" + msg(label + '-label') + "'''''" + "{{pb}}" + ui.itemsInput[i].getValue() + "{{pb}}";
+						unblock += "'''''" + await msg(label + '-label') + "'''''" + "{{pb}}" + ui.itemsInput[i].getValue() + "{{pb}}";
 					}
 				}
 			}
@@ -611,36 +627,24 @@ function getJSONPage (page) {
 
 /**
  * Expands wikilinks and external links into HTML.
- * Used instead of mw.msg(...).parse() because we want links to open in a new tab,
+ * Used instead of mw.await msg(...).parse() because we want links to open in a new tab,
  * and we don't want tags to be mangled.
  * @param {string} input
  * @returns {string}
  */
 function linkify(input) {
-	return input
-		.replace(/\{\{pb\}\}/g, '<br>')
-		.replace(
-			/\[\[:?(?:([^|\]]+?)\|)?([^\]|]+?)\]\]/g,
-			function(_, target, text) {
-				if (!target) {
-					target = text;
-				}
-				return '<a target="_blank" href="' + mw.util.getUrl(target) +
-					'" title="' + target.replace(/"/g, '&#34;') + '">' + text + '</a>';
-			}
-		)
-		// for ext links, display text should be given
-		.replace(
-			/\[(\S*?) (.*?)\]/g,
-			function (_, target, text) {
-				return '<a target="_blank" href="' + target + '">' + text + '</a>';
-			}
-		);
+	var $input = $("<span>" + input + "</span>");
+	$input.find('a').attr('target', '_blank');
+	return $input.html();
 }
 
-function msg(key) {
-	var messageArgs = Array.prototype.slice.call(arguments, 1);
-	return mw.msg.apply(mw, ['ubw-' + key].concat(messageArgs));
+function msg(key, ...messageArgs) {
+	return mw.message('ubw-' + key, ...messageArgs).plain();
+}
+
+async function msgParsed(key, ...messageArgs) {
+	let parsedMsg = await parseAndCacheMsg(key, ...messageArgs);
+	return parsedMsg;
 }
 
 function makeErrorMessage(code, err) {
