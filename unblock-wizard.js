@@ -593,7 +593,7 @@ async function prepareUserTalkText() {
 				}
 			}
 				
-			unblock = unblockStart + "<small>The following request was written through the [[Wikipedia:Unblock wizard|unblock wizard]].</small>\n" + unblock + ' ~~' + '~~}}\n';
+			unblock = unblockStart + "<small>The following request was written through the [[Wikipedia:Unblock wizard|unblock wizard]].</small>{{pb}}" + unblock + ' ~~' + '~~}}\n';
 	}
 
 	return unblock;
