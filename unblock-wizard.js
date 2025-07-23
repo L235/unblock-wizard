@@ -588,12 +588,12 @@ async function prepareUserTalkText() {
 					if(label == "username") {
 						unblockStart = '\n{{unblock-un|1=' + ui.itemsInput[i].getValue() + '|reason=';
 					} else {
-						unblock += "'''''" + await msg(label + '-label') + "'''''" + "{{pb}}" + ui.itemsInput[i].getValue() + "{{pb}}";
+						unblock += "'''''" + await msg(label + '-label') + "'''''" + "{{pb}}\n" + ui.itemsInput[i].getValue() + "{{pb}}\n";
 					}
 				}
 			}
 				
-			unblock = unblockStart + "<small>The following request was written through the [[Wikipedia:Unblock wizard|unblock wizard]].</small>{{pb}}" + unblock + ' ~~' + '~~}}\n';
+			unblock = unblockStart + "<small>The following request was written through the [[Wikipedia:Unblock wizard|unblock wizard]].</small>{{pb}}\n" + unblock + ' ~~' + '~~}}\n';
 	}
 
 	return unblock;
