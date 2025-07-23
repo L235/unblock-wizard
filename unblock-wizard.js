@@ -521,7 +521,7 @@ async function prepareUserTalkPageLink() {
 			}
 			break;
 		case "Clarification":
-			url.searchParams.set("preload", `Help:Contents/helpmepreload`);
+			url.searchParams.set("preload", `Help:Contents/helpmepreload2`);
 			url.searchParams.set("preloadparams[0]", ui.itemsInput[0].getValue());
 			url.searchParams.set("preloadparams[1]", "");
 			break;
