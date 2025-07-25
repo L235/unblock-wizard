@@ -397,8 +397,8 @@ async function handleSubmit() {
 	ui.submitButton.setDisabled(true);
 	ui.mainLabel.scrollElementIntoView();
 	
-	var url = prepareUserTalkPageLink();
-	var text = prepareUserTalkText();
+	var url = await prepareUserTalkPageLink();
+	var text = await prepareUserTalkText();
 	for(var [i, label] of questionLabels.entries()){
 		if(required[label] && !ui.itemsInput[i].getValue()){
 			emptyFields = true;
