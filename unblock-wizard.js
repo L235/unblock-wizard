@@ -529,8 +529,8 @@ async function prepareUserTalkPageLink() {
 			url.searchParams.set("editintro", `Template:Unblock-un/editintro`);
 			url.searchParams.set("preloadtitle", "Unblock request for change in username");
 			url.searchParams.set("preload", `Template:Unblock-un/preload`);
-			url.searchParams.append("preloadparams[0]", ui.itemsInput[1] ? ui.itemsInput[1].getValue() : '');
-			url.searchParams.append("preloadparams[1]", ui.itemsInput[0].getValue());
+			url.searchParams.append("preloadparams[0]", ui.itemsInput[0].getValue());
+			url.searchParams.append("preloadparams[1]", ui.itemsInput[1] ? ui.itemsInput[1].getValue() : '');
 			break;
 		default:
 			url.searchParams.set("editintro", `Template:Unblock/editintro`);
